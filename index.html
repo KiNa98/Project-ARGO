@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Project ARGO NOTE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .cover {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      cursor: pointer;
+      background: #000;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      opacity: 0;
+      transition: opacity 1.8s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    /* 화면 전체를 클릭 영역으로 */
+    .enter-link {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+    }
+
+    /* 필요하면 나중에 제목을 여기에 넣을 수 있음 */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      pointer-events: none;
+    }
+
+    .title {
+      color: white;
+      font-family: sans-serif;
+      font-size: clamp(28px, 5vw, 72px);
+      letter-spacing: 0.15em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    }
+
+    .enter {
+      margin-top: 24px;
+
+      color: rgba(255,255,255,0.8);
+      font-family: sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.25em;
+
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="cover">
+
+    <img
+      class="slide active"
+      src="images/slide01.jpg"
+      alt=""
+    >
+
+    <img
+      class="slide"
+      src="images/slide02.jpg"
+      alt=""
+    >
+
+    <img
+      class="slide"
+      src="images/slide03.jpg"
+      alt=""
+    >
+
+    <div class="overlay">
+      <div class="title">PROJECT ARGO NOTE</div>
+      <div class="enter">CLICK TO ENTER</div>
+    </div>
+
+    <a
+      class="enter-link"
+      href="YOUR_MAIN_URL"
+      target="_top"
+      aria-label="메인 페이지로 이동"
+    ></a>
+
+  </div>
+
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+
+    let current = 0;
+
+    setInterval(() => {
+
+      slides[current].classList.remove('active');
+
+      current = (current + 1) % slides.length;
+
+      slides[current].classList.add('active');
+
+    }, 6000);
+  </script>
+
+</body>
+</html>
