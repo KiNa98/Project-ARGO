@@ -35,7 +35,6 @@
 
       width: 100%;
       height: 100%;
-
       object-fit: cover;
 
       opacity: 0;
@@ -67,7 +66,11 @@
 
     .title {
       color: white;
-      font-family: sans-serif;
+      font-family:
+        "Noto Sans CJK KR",
+        "Noto Sans KR",
+        sans-serif;
+
       font-size: clamp(28px, 5vw, 72px);
       letter-spacing: 0.15em;
       text-shadow: 0 2px 12px rgba(0,0,0,0.8);
@@ -77,11 +80,41 @@
       margin-top: 24px;
 
       color: rgba(255,255,255,0.8);
-      font-family: sans-serif;
+      font-family:
+        "Noto Sans CJK KR",
+        "Noto Sans KR",
+        sans-serif;
+
       font-size: 14px;
       letter-spacing: 0.25em;
-
       opacity: 0.7;
+    }
+
+    /*
+      HOME → MAIN 전환용 검은 화면.
+      클릭 시 약 0.24초 동안 검게 덮고 main.html로 이동한다.
+    */
+    .exit-curtain {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+
+      background: #000;
+      opacity: 0;
+      pointer-events: none;
+
+      transition: opacity 0.24s ease;
+    }
+
+    .exit-curtain.show {
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide,
+      .exit-curtain {
+        transition: none;
+      }
     }
   </style>
 </head>
@@ -98,34 +131,54 @@
     <img class="slide" src="images/site06.jpg" alt="">
     <img class="slide" src="images/site07.jpg" alt="">
 
-<div class="overlay">
-  <div class="title">PROJECT ARGO NOTE</div>
-  <div class="enter">CLICK TO ENTER</div>
-</div>
+    <div class="overlay">
+      <div class="title">PROJECT ARGO NOTE</div>
+      <div class="enter">CLICK TO ENTER</div>
+    </div>
 
-<a
-  class="enter-link"
-  href="main.html"
-  target="_top"
-  aria-label="메인 페이지로 이동"
-></a>
+    <a
+      class="enter-link"
+      id="enterLink"
+      href="main.html"
+      aria-label="메인 페이지로 이동"
+    ></a>
 
   </div>
 
+  <div
+    class="exit-curtain"
+    id="exitCurtain"
+    aria-hidden="true"
+  ></div>
+
   <script>
-    const slides = document.querySelectorAll('.slide');
+    const slides = document.querySelectorAll(".slide");
+    const enterLink = document.getElementById("enterLink");
+    const exitCurtain = document.getElementById("exitCurtain");
 
     let current = 0;
 
     setInterval(() => {
-
-      slides[current].classList.remove('active');
+      slides[current].classList.remove("active");
 
       current = (current + 1) % slides.length;
 
-      slides[current].classList.add('active');
-
+      slides[current].classList.add("active");
     }, 5000);
+
+    /*
+      클릭 → 짧게 검은 화면 → MAIN 이동.
+      링크 자체는 main.html이라 JS가 꺼져 있어도 정상 이동한다.
+    */
+    enterLink.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      exitCurtain.classList.add("show");
+
+      setTimeout(() => {
+        window.location.href = enterLink.href;
+      }, 290);
+    });
   </script>
 
 </body>

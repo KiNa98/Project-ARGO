@@ -8,12 +8,10 @@
 
   <style>
     :root {
-      --hotspot-fill: rgba(64, 185, 220, 0.20);
-      --hotspot-border: rgba(155, 235, 255, 0.92);
-      --hotspot-label-bg: rgba(8, 18, 23, 0.82);
+      --text: #f3f7f8;
       --ui-bg: rgba(8, 14, 18, 0.78);
       --ui-border: rgba(190, 225, 235, 0.38);
-      --text: #f3f7f8;
+      --label-bg: rgba(7, 13, 17, 0.88);
     }
 
     * {
@@ -24,8 +22,9 @@
     body {
       margin: 0;
       width: 100%;
-      min-height: 100%;
-      background: #070a0c;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
       color: var(--text);
       font-family:
         "Noto Sans CJK KR",
@@ -37,15 +36,31 @@
     body {
       width: 100vw;
       height: 100vh;
-      min-height: 100vh;
-      overflow: hidden;
     }
 
-    /*
-      MAIN도 HOME처럼 화면 전체를 덮는다.
-      단, 핫스팟이 배경과 함께 움직이도록 실제 이미지와 핫스팟을
-      동일한 .scene 레이어 안에 넣고, 그 레이어 자체를 cover 방식으로 확대한다.
-    */
+    /* =========================================================
+       PAGE TRANSITION
+       HOME → 검은 화면 → MAIN
+       ========================================================= */
+    .entry-curtain {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: #000;
+      opacity: 1;
+      pointer-events: none;
+      transition: opacity 0.34s ease;
+    }
+
+    .entry-curtain.hide {
+      opacity: 0;
+    }
+
+    /* =========================================================
+       MAIN STAGE
+       배경과 핫스팟을 같은 scene 안에서 cover 방식으로 확대한다.
+       그래서 화면 비율에 따라 그림이 잘려도 핫스팟 위치가 따라간다.
+       ========================================================= */
     .main-stage {
       position: relative;
       width: 100vw;
@@ -63,19 +78,14 @@
       aspect-ratio: 1672 / 941;
     }
 
-    /*
-      화면이 원본보다 넓으면 가로를 맞추고 위아래를 잘라낸다.
-      화면이 원본보다 좁으면 세로를 맞추고 좌우를 잘라낸다.
-      따라서 이미지와 핫스팟의 상대 좌표는 계속 동일하게 유지된다.
-    */
-    @media (min-aspect-ratio: 1672 / 941) {
+    @media (min-aspect-ratio: 1672/941) {
       .scene {
         width: 100vw;
         height: auto;
       }
     }
 
-    @media (max-aspect-ratio: 1672 / 941) {
+    @media (max-aspect-ratio: 1672/941) {
       .scene {
         width: auto;
         height: 100vh;
@@ -90,34 +100,60 @@
       display: block;
       width: 100%;
       height: 100%;
-
       object-fit: fill;
+
       pointer-events: none;
       user-select: none;
       -webkit-user-drag: none;
     }
 
-    /*
-      핫스팟 공통
-      평상시에는 완전히 투명하다.
-      hover / keyboard focus / 상호작용 표시 모드에서만 나타난다.
-    */
+    /* =========================================================
+       HOTSPOTS
+       - 기본 상태에서도 아주 약하게 보임
+       - 각 영역이 서로 다른 색으로 천천히 점멸
+       - hover/focus 시 강하게 표시
+       - INTERACTION 버튼으로 전체 표시 가능
+       ========================================================= */
     .hotspot {
+      --spot-rgb: 90, 200, 220;
+
       position: absolute;
       z-index: 10;
 
       display: block;
-      background: rgba(64, 185, 220, 0);
-      border: 2px solid rgba(155, 235, 255, 0);
-      border-radius: 4px;
+
+      background: rgba(var(--spot-rgb), 0.08);
+      border: 2px solid rgba(var(--spot-rgb), 0.20);
+      border-radius: 5px;
 
       text-decoration: none;
       cursor: pointer;
 
+      animation: hotspotPulse 4.8s ease-in-out infinite;
+
       transition:
         background-color 160ms ease,
         border-color 160ms ease,
-        box-shadow 160ms ease;
+        box-shadow 160ms ease,
+        filter 160ms ease;
+    }
+
+    @keyframes hotspotPulse {
+      0%,
+      68%,
+      100% {
+        background: rgba(var(--spot-rgb), 0.06);
+        border-color: rgba(var(--spot-rgb), 0.16);
+        box-shadow: 0 0 0 rgba(var(--spot-rgb), 0);
+      }
+
+      82% {
+        background: rgba(var(--spot-rgb), 0.20);
+        border-color: rgba(var(--spot-rgb), 0.50);
+        box-shadow:
+          inset 0 0 34px rgba(var(--spot-rgb), 0.08),
+          0 0 18px rgba(var(--spot-rgb), 0.18);
+      }
     }
 
     .hotspot::after {
@@ -128,16 +164,20 @@
       bottom: 10px;
       transform: translate(-50%, 6px);
 
-      padding: 7px 11px;
-      border: 1px solid var(--ui-border);
-      border-radius: 3px;
+      max-width: calc(100% - 16px);
+      padding: 7px 10px;
 
+      border: 1px solid rgba(var(--spot-rgb), 0.48);
+      border-radius: 4px;
+
+      background: var(--label-bg);
       color: var(--text);
-      background: var(--hotspot-label-bg);
 
-      font-size: clamp(11px, 1vw, 15px);
+      font-size: clamp(10px, 0.88vw, 14px);
       font-weight: 700;
-      letter-spacing: 0.08em;
+      line-height: 1.35;
+      letter-spacing: 0.025em;
+      text-align: center;
       white-space: nowrap;
 
       opacity: 0;
@@ -151,11 +191,12 @@
     .hotspot:hover,
     .hotspot:focus-visible,
     .main-stage.show-hotspots .hotspot {
-      background: var(--hotspot-fill);
-      border-color: var(--hotspot-border);
+      animation-play-state: paused;
+      background: rgba(var(--spot-rgb), 0.24);
+      border-color: rgba(var(--spot-rgb), 0.82);
       box-shadow:
-        inset 0 0 30px rgba(100, 215, 245, 0.12),
-        0 0 16px rgba(100, 215, 245, 0.12);
+        inset 0 0 36px rgba(var(--spot-rgb), 0.12),
+        0 0 20px rgba(var(--spot-rgb), 0.22);
       outline: none;
     }
 
@@ -166,61 +207,62 @@
       transform: translate(-50%, 0);
     }
 
-    /*
-      기준 이미지: 1672×941
-      아래 값은 최종 MAIN 일러스트의 공간 경계를 기준으로 한 1차 좌표.
-      실제 GitHub Pages 화면에서 반투명 표시로 확인한 뒤 미세조정하면 된다.
-    */
+    /* 각 영역별 색상 + 점멸 시간차 */
 
-    /* 좌상단 휴게실 — NEWS / WORLD / SHORT STORY */
+    /* 휴게실 — 뉴스 / 단편 */
     .hotspot-lounge {
+      --spot-rgb: 66, 195, 220;
       left: 1.5%;
       top: 2.0%;
       width: 28.2%;
-      height: 36.0%;
+      height: 34.5%;
+      animation-delay: 0s;
     }
 
-    /* 상단 장비 창고 — CARDS */
+    /* 장비 창고 — 카드 */
     .hotspot-storage {
+      --spot-rgb: 225, 187, 74;
       left: 29.6%;
       top: 2.0%;
       width: 17.5%;
       height: 36.0%;
+      animation-delay: -1.2s;
     }
 
-    /* 좌하단 사무실 — ARCHIVE / PERSONNEL / RECORDS */
+    /* 사무실 — 아카이브 */
     .hotspot-office {
+      --spot-rgb: 151, 123, 222;
       left: 0.8%;
       top: 38.0%;
       width: 46.2%;
       height: 33.5%;
+      animation-delay: -2.4s;
     }
 
-    /* 우측 엘리베이터·지하 하행 구역 — GAMEPLAY
-       중앙 계단은 클릭 대상에서 제외하고,
-       오른쪽 엘리베이터와 지하로 내려가는 하행 구역만 하나의 큰 영역으로 묶는다. */
+    /* 우측 엘리베이터 + 지하 하행 구역 — 체험판 */
     .hotspot-elevator {
+      --spot-rgb: 225, 124, 80;
       left: 72.0%;
       top: 26.5%;
       width: 27.2%;
       height: 56.5%;
+      animation-delay: -3.6s;
     }
 
-    /*
-      랜덤 캐릭터 슬롯.
-      현재는 비어 있다.
-      character-slot에 .active가 붙고 이미지가 지정될 때만 표시된다.
-    */
+    /* =========================================================
+       RANDOM CHARACTER SLOT
+       추후 투명 PNG 스탠딩 일러스트 추가용
+       ========================================================= */
     .character-slot {
       position: absolute;
       z-index: 30;
 
-      left: 48.5%;
+      left: 51%;
       bottom: 0;
       transform: translateX(-50%);
 
-      width: 19%;
-      height: 61%;
+      width: 18%;
+      height: 62%;
 
       display: none;
       align-items: flex-end;
@@ -241,7 +283,7 @@
       object-fit: contain;
       object-position: bottom center;
 
-      filter: drop-shadow(0 7px 12px rgba(0, 0, 0, 0.42));
+      filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
       transform-origin: bottom center;
 
       transition:
@@ -253,11 +295,13 @@
     .character-slot:focus-visible img {
       filter:
         brightness(1.08)
-        drop-shadow(0 7px 15px rgba(0, 0, 0, 0.48));
+        drop-shadow(0 8px 17px rgba(0, 0, 0, 0.52));
       transform: translateY(-3px);
     }
 
-    /* 오른쪽 위 상호작용 표시 버튼 */
+    /* =========================================================
+       UI
+       ========================================================= */
     .interaction-guide {
       position: fixed;
       z-index: 100;
@@ -295,7 +339,7 @@
     .interaction-guide:hover,
     .interaction-guide:focus-visible,
     .interaction-guide.active {
-      background: rgba(20, 50, 60, 0.90);
+      background: rgba(20, 50, 60, 0.92);
       border-color: rgba(155, 235, 255, 0.72);
       outline: none;
     }
@@ -313,20 +357,59 @@
       box-shadow: 0 0 8px rgba(120, 225, 250, 0.68);
     }
 
-    /* 아직 목적 페이지가 없을 때 표시하는 안내 */
+    /* 첫 진입 시 짧게 보여주는 안내 */
+    .main-hint {
+      position: fixed;
+      z-index: 90;
+
+      left: 50%;
+      bottom: 24px;
+      transform: translate(-50%, 10px);
+
+      max-width: min(88vw, 460px);
+      padding: 10px 14px;
+
+      border: 1px solid rgba(190, 225, 235, 0.34);
+      border-radius: 4px;
+
+      background: rgba(7, 13, 17, 0.80);
+      color: rgba(245, 249, 250, 0.94);
+
+      font-size: 12px;
+      letter-spacing: 0.025em;
+      text-align: center;
+
+      opacity: 0;
+      pointer-events: none;
+
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+    }
+
+    .main-hint.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
     .toast {
       position: fixed;
       z-index: 120;
+
       left: 50%;
       bottom: 24px;
       transform: translate(-50%, 12px);
 
-      max-width: min(90vw, 420px);
+      max-width: min(90vw, 440px);
       padding: 10px 14px;
 
       border: 1px solid var(--ui-border);
       border-radius: 4px;
-      background: rgba(6, 12, 16, 0.90);
+
+      background: rgba(6, 12, 16, 0.92);
       color: var(--text);
 
       font-size: 13px;
@@ -345,10 +428,11 @@
       transform: translate(-50%, 0);
     }
 
-    /* 개발용: true로 켜면 항상 핫스팟이 보인다. */
+    /* 개발용 */
     .main-stage.debug .hotspot {
-      background: rgba(255, 60, 60, 0.18);
-      border-color: rgba(255, 110, 110, 0.92);
+      animation: none;
+      background: rgba(255, 65, 65, 0.22);
+      border-color: rgba(255, 120, 120, 0.96);
     }
 
     .main-stage.debug .hotspot::after {
@@ -365,17 +449,32 @@
       }
 
       .hotspot::after {
-        bottom: 6px;
+        bottom: 5px;
         padding: 5px 7px;
         font-size: 9px;
+        white-space: normal;
+      }
+
+      .main-hint {
+        bottom: 14px;
+        font-size: 11px;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      .entry-curtain,
+      .hotspot,
+      .hotspot::after,
+      .main-hint,
+      .toast,
+      .character-slot img {
+        animation: none !important;
         transition: none !important;
+      }
+
+      .hotspot {
+        background: rgba(var(--spot-rgb), 0.11);
+        border-color: rgba(var(--spot-rgb), 0.30);
       }
     }
   </style>
@@ -383,12 +482,16 @@
 
 <body>
 
+  <!-- HOME에서 넘어온 직후 아주 잠깐 검은 화면을 유지한 뒤 MAIN을 보여준다. -->
+  <div class="entry-curtain" id="entryCurtain" aria-hidden="true"></div>
+
   <main
     class="main-stage"
     id="mainStage"
     aria-label="Project ARGO NOTE 메인 거점"
   >
-    <div class="scene" id="scene">
+    <div class="scene">
+
       <img
         class="main-bg"
         src="images/site-main.jpg"
@@ -396,57 +499,53 @@
         draggable="false"
       >
 
-    <!--
-      아직 목적 페이지가 완성되지 않았으므로 href는 #으로 둔다.
-      페이지가 생기면 아래 ROUTES 객체에 주소만 입력하면 된다.
-    -->
+      <a
+        class="hotspot hotspot-lounge"
+        href="#"
+        data-route="lounge"
+        data-label="휴게실: 뉴스 및 단편 열람"
+        aria-label="휴게실: 뉴스 및 단편 열람"
+      ></a>
 
-    <a
-      class="hotspot hotspot-lounge"
-      href="#"
-      data-route="lounge"
-      data-label="휴게실: 뉴스 및 단편 열람"
-      aria-label="휴게실: 뉴스, 세계관 설정, 단편"
-    ></a>
+      <a
+        class="hotspot hotspot-storage"
+        href="#"
+        data-route="storage"
+        data-label="장비 창고: 카드 열람"
+        aria-label="장비 창고: 카드 열람"
+      ></a>
 
-    <a
-      class="hotspot hotspot-storage"
-      href="#"
-      data-route="storage"
-      data-label="장비 창고: 카드 열람"
-      aria-label="장비 창고: 카드 열람"
-    ></a>
+      <a
+        class="hotspot hotspot-office"
+        href="#"
+        data-route="office"
+        data-label="사무실: 출입 명부 및 기록 확인"
+        aria-label="사무실: 출입 명부 및 기록 확인"
+      ></a>
 
-    <a
-      class="hotspot hotspot-office"
-      href="#"
-      data-route="office"
-      data-label="사무실: 출입 명부 및 기록 확인"
-      aria-label="사무실: 아카이브와 등장인물 기록"
-    ></a>
+      <a
+        class="hotspot hotspot-elevator"
+        href="#"
+        data-route="gameplay"
+        data-label="체험판 테스트 플레이"
+        aria-label="체험판 테스트 플레이"
+      ></a>
 
-    <a
-      class="hotspot hotspot-elevator"
-      href="#"
-      data-route="Demo Test Play"
-      data-label="테스트 플레이"
-      aria-label="우측 엘리베이터와 지하 하행 구역: 시스템 체험"
-    ></a>
-
-    <!-- 랜덤 캐릭터가 추가되면 이 슬롯을 사용한다. -->
-    <a
-      class="character-slot"
-      id="characterSlot"
-      href="#"
-      aria-label="오늘 거점에 있는 인물"
-    >
-      <img
-        id="characterImage"
-        src=""
-        alt=""
-        draggable="false"
+      <!-- 추후 랜덤 캐릭터 투명 PNG 표시 -->
+      <a
+        class="character-slot"
+        id="characterSlot"
+        href="#"
+        aria-label="오늘 거점에 있는 인물"
       >
-    </a>
+        <img
+          id="characterImage"
+          src=""
+          alt=""
+          draggable="false"
+        >
+      </a>
+
     </div>
   </main>
 
@@ -462,6 +561,14 @@
   </button>
 
   <div
+    class="main-hint"
+    id="mainHint"
+    aria-hidden="true"
+  >
+    점멸하는 구역을 선택해 이동할 수 있습니다.
+  </div>
+
+  <div
     class="toast"
     id="toast"
     role="status"
@@ -470,11 +577,7 @@
 
   <script>
     /*
-      ============================================================
-      1. 목적 페이지 연결
-      ============================================================
-      페이지가 생기면 null 대신 실제 파일 주소를 입력하면 된다.
-
+      각 페이지가 완성되면 null 대신 실제 주소를 넣는다.
       예:
       lounge: "news.html",
       storage: "cards.html",
@@ -488,36 +591,24 @@
       gameplay: null
     };
 
-    /*
-      ============================================================
-      2. 개발용 핫스팟 표시
-      ============================================================
-      좌표를 조정할 때만 true로 바꾼다.
-      완성 후에는 false로 되돌린다.
-    */
     const DEBUG_HOTSPOTS = false;
 
     /*
-      ============================================================
-      3. 랜덤 캐릭터
-      ============================================================
-      캐릭터 투명 PNG와 개인 아카이브 페이지가 준비되면
-      아래 배열에 추가하면 된다.
-
-      예:
+      추후 캐릭터 추가 예시:
       {
         name: "Plox",
         image: "images/characters/plox.png",
         link: "archive/plox.html"
       }
-
-      빈 배열이면 MAIN에는 캐릭터가 표시되지 않는다.
     */
     const CHARACTERS = [];
 
     const stage = document.getElementById("mainStage");
     const guideButton = document.getElementById("interactionGuide");
+    const mainHint = document.getElementById("mainHint");
     const toast = document.getElementById("toast");
+    const entryCurtain = document.getElementById("entryCurtain");
+
     const characterSlot = document.getElementById("characterSlot");
     const characterImage = document.getElementById("characterImage");
 
@@ -525,7 +616,26 @@
       stage.classList.add("debug");
     }
 
-    // 상호작용 영역 전체 표시 / 숨김
+    /*
+      MAIN 진입 효과:
+      페이지가 준비되면 0.12초 정도 검은 화면을 유지한 후
+      약 0.34초에 걸쳐 메인 화면을 드러낸다.
+    */
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        entryCurtain.classList.add("hide");
+      }, 120);
+
+      setTimeout(() => {
+        mainHint.classList.add("show");
+      }, 650);
+
+      setTimeout(() => {
+        mainHint.classList.remove("show");
+      }, 4300);
+    });
+
+    // 전체 상호작용 영역 표시/숨김
     guideButton.addEventListener("click", () => {
       const isActive = stage.classList.toggle("show-hotspots");
 
@@ -533,7 +643,7 @@
       guideButton.setAttribute("aria-pressed", String(isActive));
     });
 
-    // 아직 연결되지 않은 페이지를 눌렀을 때 404 대신 안내 표시
+    // 아직 목적 페이지가 없으면 안내만 표시
     document.querySelectorAll(".hotspot").forEach((hotspot) => {
       hotspot.addEventListener("click", (event) => {
         const routeName = hotspot.dataset.route;
@@ -554,6 +664,7 @@
     function showToast(message) {
       clearTimeout(toastTimer);
 
+      mainHint.classList.remove("show");
       toast.textContent = message;
       toast.classList.add("show");
 
