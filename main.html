@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Project ARGO NOTE — MAIN</title>
+
+  <style>
+    :root {
+      --hotspot-fill: rgba(64, 185, 220, 0.20);
+      --hotspot-border: rgba(155, 235, 255, 0.92);
+      --hotspot-label-bg: rgba(8, 18, 23, 0.82);
+      --ui-bg: rgba(8, 14, 18, 0.78);
+      --ui-border: rgba(190, 225, 235, 0.38);
+      --text: #f3f7f8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #070a0c;
+      color: var(--text);
+      font-family:
+        "Noto Sans CJK KR",
+        "Noto Sans KR",
+        "Malgun Gothic",
+        sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    /*
+      MAIN은 핫스팟 좌표 유지를 위해 원본 1672×941 비율을 그대로 사용한다.
+      HOME 슬라이드처럼 object-fit: cover로 잘라내지 않는다.
+    */
+    .main-stage {
+      position: relative;
+      width: min(100vw, calc(100vh * 1672 / 941));
+      aspect-ratio: 1672 / 941;
+      overflow: hidden;
+      background: #000;
+      user-select: none;
+    }
+
+    .main-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /*
+      핫스팟 공통
+      평상시에는 완전히 투명하다.
+      hover / keyboard focus / 상호작용 표시 모드에서만 나타난다.
+    */
+    .hotspot {
+      position: absolute;
+      z-index: 10;
+
+      display: block;
+      background: rgba(64, 185, 220, 0);
+      border: 2px solid rgba(155, 235, 255, 0);
+      border-radius: 4px;
+
+      text-decoration: none;
+      cursor: pointer;
+
+      transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    .hotspot::after {
+      content: attr(data-label);
+
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translate(-50%, 6px);
+
+      padding: 7px 11px;
+      border: 1px solid var(--ui-border);
+      border-radius: 3px;
+
+      color: var(--text);
+      background: var(--hotspot-label-bg);
+
+      font-size: clamp(11px, 1vw, 15px);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        opacity 160ms ease,
+        transform 160ms ease;
+    }
+
+    .hotspot:hover,
+    .hotspot:focus-visible,
+    .main-stage.show-hotspots .hotspot {
+      background: var(--hotspot-fill);
+      border-color: var(--hotspot-border);
+      box-shadow:
+        inset 0 0 30px rgba(100, 215, 245, 0.12),
+        0 0 16px rgba(100, 215, 245, 0.12);
+      outline: none;
+    }
+
+    .hotspot:hover::after,
+    .hotspot:focus-visible::after,
+    .main-stage.show-hotspots .hotspot::after {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /*
+      기준 이미지: 1672×941
+      아래 값은 최종 MAIN 일러스트의 공간 경계를 기준으로 한 1차 좌표.
+      실제 GitHub Pages 화면에서 반투명 표시로 확인한 뒤 미세조정하면 된다.
+    */
+
+    /* 좌상단 휴게실 — NEWS / WORLD / SHORT STORY */
+    .hotspot-lounge {
+      left: 1.5%;
+      top: 2.0%;
+      width: 28.2%;
+      height: 34.5%;
+    }
+
+    /* 상단 장비 창고 — CARDS */
+    .hotspot-storage {
+      left: 29.6%;
+      top: 2.0%;
+      width: 17.5%;
+      height: 36.0%;
+    }
+
+    /* 좌하단 사무실 — ARCHIVE / PERSONNEL / RECORDS */
+    .hotspot-office {
+      left: 0.8%;
+      top: 38.0%;
+      width: 46.2%;
+      height: 33.5%;
+    }
+
+    /* 중앙 에스컬레이터 — GAMEPLAY */
+    .hotspot-escalator {
+      left: 53.8%;
+      top: 28.3%;
+      width: 17.5%;
+      height: 35.5%;
+    }
+
+    /* 우측 엘리베이터·하행 통로 — GAMEPLAY */
+    .hotspot-elevator {
+      left: 72.0%;
+      top: 27.0%;
+      width: 27.2%;
+      height: 44.0%;
+    }
+
+    /*
+      랜덤 캐릭터 슬롯.
+      현재는 비어 있다.
+      character-slot에 .active가 붙고 이미지가 지정될 때만 표시된다.
+    */
+    .character-slot {
+      position: absolute;
+      z-index: 30;
+
+      left: 48.5%;
+      bottom: 0;
+      transform: translateX(-50%);
+
+      width: 19%;
+      height: 61%;
+
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .character-slot.active {
+      display: flex;
+    }
+
+    .character-slot img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: bottom center;
+
+      filter: drop-shadow(0 7px 12px rgba(0, 0, 0, 0.42));
+      transform-origin: bottom center;
+
+      transition:
+        filter 160ms ease,
+        transform 160ms ease;
+    }
+
+    .character-slot:hover img,
+    .character-slot:focus-visible img {
+      filter:
+        brightness(1.08)
+        drop-shadow(0 7px 15px rgba(0, 0, 0, 0.48));
+      transform: translateY(-3px);
+    }
+
+    /* 오른쪽 위 상호작용 표시 버튼 */
+    .interaction-guide {
+      position: fixed;
+      z-index: 100;
+
+      top: 16px;
+      right: 16px;
+
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      min-height: 38px;
+      padding: 8px 12px;
+
+      border: 1px solid var(--ui-border);
+      border-radius: 4px;
+
+      background: var(--ui-bg);
+      color: var(--text);
+
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+
+      cursor: pointer;
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+
+      transition:
+        background-color 160ms ease,
+        border-color 160ms ease;
+    }
+
+    .interaction-guide:hover,
+    .interaction-guide:focus-visible,
+    .interaction-guide.active {
+      background: rgba(20, 50, 60, 0.90);
+      border-color: rgba(155, 235, 255, 0.72);
+      outline: none;
+    }
+
+    .interaction-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1px solid rgba(170, 235, 250, 0.92);
+      background: rgba(80, 190, 220, 0.22);
+    }
+
+    .interaction-guide.active .interaction-dot {
+      background: rgba(120, 225, 250, 0.92);
+      box-shadow: 0 0 8px rgba(120, 225, 250, 0.68);
+    }
+
+    /* 아직 목적 페이지가 없을 때 표시하는 안내 */
+    .toast {
+      position: fixed;
+      z-index: 120;
+      left: 50%;
+      bottom: 24px;
+      transform: translate(-50%, 12px);
+
+      max-width: min(90vw, 420px);
+      padding: 10px 14px;
+
+      border: 1px solid var(--ui-border);
+      border-radius: 4px;
+      background: rgba(6, 12, 16, 0.90);
+      color: var(--text);
+
+      font-size: 13px;
+      text-align: center;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* 개발용: true로 켜면 항상 핫스팟이 보인다. */
+    .main-stage.debug .hotspot {
+      background: rgba(255, 60, 60, 0.18);
+      border-color: rgba(255, 110, 110, 0.92);
+    }
+
+    .main-stage.debug .hotspot::after {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 700px) {
+      .interaction-guide {
+        top: 10px;
+        right: 10px;
+        padding: 7px 9px;
+        font-size: 10px;
+      }
+
+      .hotspot::after {
+        bottom: 6px;
+        padding: 5px 7px;
+        font-size: 9px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main
+    class="main-stage"
+    id="mainStage"
+    aria-label="Project ARGO NOTE 메인 거점"
+  >
+    <img
+      class="main-bg"
+      src="images/site-main.jpg"
+      alt="반지하 지하철 역사를 개조한 서울 생활권 확장 사업 거점"
+      draggable="false"
+    >
+
+    <!--
+      아직 목적 페이지가 완성되지 않았으므로 href는 #으로 둔다.
+      페이지가 생기면 아래 ROUTES 객체에 주소만 입력하면 된다.
+    -->
+
+    <a
+      class="hotspot hotspot-lounge"
+      href="#"
+      data-route="lounge"
+      data-label="NEWS / STORY"
+      aria-label="휴게실: 뉴스, 세계관 설정, 단편"
+    ></a>
+
+    <a
+      class="hotspot hotspot-storage"
+      href="#"
+      data-route="storage"
+      data-label="CARDS"
+      aria-label="장비 창고: 카드 열람"
+    ></a>
+
+    <a
+      class="hotspot hotspot-office"
+      href="#"
+      data-route="office"
+      data-label="ARCHIVE"
+      aria-label="사무실: 아카이브와 등장인물 기록"
+    ></a>
+
+    <a
+      class="hotspot hotspot-escalator"
+      href="#"
+      data-route="gameplay"
+      data-label="GAMEPLAY"
+      aria-label="에스컬레이터: 시스템 체험"
+    ></a>
+
+    <a
+      class="hotspot hotspot-elevator"
+      href="#"
+      data-route="gameplay"
+      data-label="GAMEPLAY"
+      aria-label="엘리베이터와 하행 통로: 시스템 체험"
+    ></a>
+
+    <!-- 랜덤 캐릭터가 추가되면 이 슬롯을 사용한다. -->
+    <a
+      class="character-slot"
+      id="characterSlot"
+      href="#"
+      aria-label="오늘 거점에 있는 인물"
+    >
+      <img
+        id="characterImage"
+        src=""
+        alt=""
+        draggable="false"
+      >
+    </a>
+  </main>
+
+  <button
+    class="interaction-guide"
+    id="interactionGuide"
+    type="button"
+    aria-pressed="false"
+    aria-controls="mainStage"
+  >
+    <span class="interaction-dot" aria-hidden="true"></span>
+    INTERACTION
+  </button>
+
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script>
+    /*
+      ============================================================
+      1. 목적 페이지 연결
+      ============================================================
+      페이지가 생기면 null 대신 실제 파일 주소를 입력하면 된다.
+
+      예:
+      lounge: "news.html",
+      storage: "cards.html",
+      office: "archive.html",
+      gameplay: "gameplay.html"
+    */
+    const ROUTES = {
+      lounge: null,
+      storage: null,
+      office: null,
+      gameplay: null
+    };
+
+    /*
+      ============================================================
+      2. 개발용 핫스팟 표시
+      ============================================================
+      좌표를 조정할 때만 true로 바꾼다.
+      완성 후에는 false로 되돌린다.
+    */
+    const DEBUG_HOTSPOTS = false;
+
+    /*
+      ============================================================
+      3. 랜덤 캐릭터
+      ============================================================
+      캐릭터 투명 PNG와 개인 아카이브 페이지가 준비되면
+      아래 배열에 추가하면 된다.
+
+      예:
+      {
+        name: "Plox",
+        image: "images/characters/plox.png",
+        link: "archive/plox.html"
+      }
+
+      빈 배열이면 MAIN에는 캐릭터가 표시되지 않는다.
+    */
+    const CHARACTERS = [];
+
+    const stage = document.getElementById("mainStage");
+    const guideButton = document.getElementById("interactionGuide");
+    const toast = document.getElementById("toast");
+    const characterSlot = document.getElementById("characterSlot");
+    const characterImage = document.getElementById("characterImage");
+
+    if (DEBUG_HOTSPOTS) {
+      stage.classList.add("debug");
+    }
+
+    // 상호작용 영역 전체 표시 / 숨김
+    guideButton.addEventListener("click", () => {
+      const isActive = stage.classList.toggle("show-hotspots");
+
+      guideButton.classList.toggle("active", isActive);
+      guideButton.setAttribute("aria-pressed", String(isActive));
+    });
+
+    // 아직 연결되지 않은 페이지를 눌렀을 때 404 대신 안내 표시
+    document.querySelectorAll(".hotspot").forEach((hotspot) => {
+      hotspot.addEventListener("click", (event) => {
+        const routeName = hotspot.dataset.route;
+        const destination = ROUTES[routeName];
+
+        if (!destination) {
+          event.preventDefault();
+          showToast(`${hotspot.dataset.label} 페이지는 현재 준비 중입니다.`);
+          return;
+        }
+
+        hotspot.href = destination;
+      });
+    });
+
+    let toastTimer;
+
+    function showToast(message) {
+      clearTimeout(toastTimer);
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    // 랜덤 캐릭터 표시
+    if (CHARACTERS.length > 0) {
+      const character =
+        CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
+
+      characterImage.src = character.image;
+      characterImage.alt = character.name;
+      characterSlot.href = character.link;
+      characterSlot.setAttribute(
+        "aria-label",
+        `${character.name} 개인 아카이브 열기`
+      );
+
+      characterSlot.classList.add("active");
+    } else {
+      characterSlot.removeAttribute("href");
+    }
+  </script>
+
+</body>
+</html>
