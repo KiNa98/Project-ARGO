@@ -35,23 +35,51 @@
     }
 
     body {
+      width: 100vw;
+      height: 100vh;
       min-height: 100vh;
       overflow: hidden;
-      display: grid;
-      place-items: center;
     }
 
     /*
-      MAIN은 핫스팟 좌표 유지를 위해 원본 1672×941 비율을 그대로 사용한다.
-      HOME 슬라이드처럼 object-fit: cover로 잘라내지 않는다.
+      MAIN도 HOME처럼 화면 전체를 덮는다.
+      단, 핫스팟이 배경과 함께 움직이도록 실제 이미지와 핫스팟을
+      동일한 .scene 레이어 안에 넣고, 그 레이어 자체를 cover 방식으로 확대한다.
     */
     .main-stage {
       position: relative;
-      width: min(100vw, calc(100vh * 1672 / 941));
-      aspect-ratio: 1672 / 941;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
       background: #000;
       user-select: none;
+    }
+
+    .scene {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      aspect-ratio: 1672 / 941;
+    }
+
+    /*
+      화면이 원본보다 넓으면 가로를 맞추고 위아래를 잘라낸다.
+      화면이 원본보다 좁으면 세로를 맞추고 좌우를 잘라낸다.
+      따라서 이미지와 핫스팟의 상대 좌표는 계속 동일하게 유지된다.
+    */
+    @media (min-aspect-ratio: 1672 / 941) {
+      .scene {
+        width: 100vw;
+        height: auto;
+      }
+    }
+
+    @media (max-aspect-ratio: 1672 / 941) {
+      .scene {
+        width: auto;
+        height: 100vh;
+      }
     }
 
     .main-bg {
@@ -168,20 +196,14 @@
       height: 33.5%;
     }
 
-    /* 중앙 에스컬레이터 — GAMEPLAY */
-    .hotspot-escalator {
-      left: 53.8%;
-      top: 28.3%;
-      width: 17.5%;
-      height: 35.5%;
-    }
-
-    /* 우측 엘리베이터·하행 통로 — GAMEPLAY */
+    /* 우측 엘리베이터·지하 하행 구역 — GAMEPLAY
+       중앙 계단은 클릭 대상에서 제외하고,
+       오른쪽 엘리베이터와 지하로 내려가는 하행 구역만 하나의 큰 영역으로 묶는다. */
     .hotspot-elevator {
       left: 72.0%;
-      top: 27.0%;
+      top: 26.5%;
       width: 27.2%;
-      height: 44.0%;
+      height: 56.5%;
     }
 
     /*
@@ -366,12 +388,13 @@
     id="mainStage"
     aria-label="Project ARGO NOTE 메인 거점"
   >
-    <img
-      class="main-bg"
-      src="images/site-main.jpg"
-      alt="반지하 지하철 역사를 개조한 서울 생활권 확장 사업 거점"
-      draggable="false"
-    >
+    <div class="scene" id="scene">
+      <img
+        class="main-bg"
+        src="images/site-main.jpg"
+        alt="반지하 지하철 역사를 개조한 서울 생활권 확장 사업 거점"
+        draggable="false"
+      >
 
     <!--
       아직 목적 페이지가 완성되지 않았으므로 href는 #으로 둔다.
@@ -403,19 +426,11 @@
     ></a>
 
     <a
-      class="hotspot hotspot-escalator"
-      href="#"
-      data-route="gameplay"
-      data-label="GAMEPLAY"
-      aria-label="에스컬레이터: 시스템 체험"
-    ></a>
-
-    <a
       class="hotspot hotspot-elevator"
       href="#"
       data-route="gameplay"
       data-label="GAMEPLAY"
-      aria-label="엘리베이터와 하행 통로: 시스템 체험"
+      aria-label="우측 엘리베이터와 지하 하행 구역: 시스템 체험"
     ></a>
 
     <!-- 랜덤 캐릭터가 추가되면 이 슬롯을 사용한다. -->
@@ -432,6 +447,7 @@
         draggable="false"
       >
     </a>
+    </div>
   </main>
 
   <button
