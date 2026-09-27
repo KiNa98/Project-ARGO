@@ -1,27 +1,338 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Lounge</title>
+
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:transparent;font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif}
-body{display:grid;place-items:center;padding:5vh 6vw;color:#222}
-.paper{width:min(82vw,1380px);height:min(82vh,830px);padding:42px 48px;background:rgba(246,244,238,.95);border:1px solid rgba(210,206,195,.95);box-shadow:0 24px 80px rgba(0,0,0,.42);overflow:auto}
-.code{font-size:10px;letter-spacing:.20em;color:#777;margin:0 0 10px}
-h1{font-size:clamp(22px,2.7vw,38px);margin:0 0 8px}
-.sub{font-size:13px;color:#555;border-bottom:1px solid #aaa;padding-bottom:16px;margin-bottom:26px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}.item{padding:18px 0;border-bottom:1px solid #ccc}.item h2{font-size:18px}.item p{font-size:13px;line-height:1.8;color:#444}
-@media(max-width:800px){.paper{width:94vw;height:auto;min-height:90vh}.grid{grid-template-columns:1fr}}
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:transparent;
+  color:#2a2926;
+
+  font-family:
+    "Noto Sans CJK KR",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    sans-serif;
+}
+
+/* MAIN의 랜덤 배경이 그대로 보이도록 투명 유지 */
+body{
+  display:grid;
+  place-items:center;
+
+  padding:5vh 6vw;
+}
+
+/* =========================================================
+   PAPER PANEL
+   - 기존보다 훨씬 밝고 부드러운 종이색
+   - 외곽선은 거의 느껴지지 않을 정도로 얇게
+   - 그림자는 강한 카드 느낌보다 '종이 한 장이 떠 있는' 정도
+   ========================================================= */
+.paper{
+  position:relative;
+
+  width:min(82vw,1380px);
+  height:min(82vh,830px);
+
+  padding:38px 46px 42px;
+
+  overflow:auto;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(249,247,240,.965),
+      rgba(244,241,232,.955)
+    );
+
+  border:1px solid rgba(205,201,191,.42);
+  border-radius:3px;
+
+  box-shadow:
+    0 18px 54px rgba(0,0,0,.25),
+    0 2px 8px rgba(0,0,0,.08);
+
+  /* 배경이 너무 날카롭게 비치지 않도록 아주 약하게만 */
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+
+/* 종이의 가장자리가 너무 딱딱해 보이지 않게 내부에 거의 보이지 않는 선 */
+.paper::after{
+  content:"";
+  position:absolute;
+  inset:10px;
+
+  border:1px solid rgba(150,145,136,.08);
+  pointer-events:none;
+}
+
+/* =========================================================
+   HEADER
+   신문의 대형 타이틀처럼 보이지 않도록
+   좌측 상단에 작은 분류 표기 정도로 축소
+   ========================================================= */
+.paper-header{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:24px;
+
+  margin-bottom:28px;
+  padding-bottom:14px;
+
+  border-bottom:1px solid rgba(110,106,98,.16);
+}
+
+.header-copy{
+  min-width:0;
+}
+
+.code{
+  margin:0 0 4px;
+
+  color:rgba(79,77,72,.52);
+
+  font-size:8px;
+  line-height:1.2;
+  letter-spacing:.22em;
+}
+
+h1{
+  margin:0;
+
+  color:#35332f;
+
+  /* 기존 대형 제목을 크게 축소 */
+  font-size:clamp(14px,1.25vw,18px);
+  font-weight:600;
+  line-height:1.25;
+  letter-spacing:.02em;
+}
+
+.sub{
+  margin:5px 0 0;
+
+  color:rgba(74,72,67,.62);
+
+  font-size:9px;
+  line-height:1.5;
+}
+
+/* 우측 상단의 작은 호수/분류 표기 */
+.issue{
+  flex:0 0 auto;
+
+  padding-top:2px;
+
+  color:rgba(74,72,67,.43);
+
+  font-size:8px;
+  line-height:1.55;
+  letter-spacing:.12em;
+  text-align:right;
+}
+
+/* =========================================================
+   CONTENT
+   뉴스와 단편을 '종이 위의 기사 묶음'처럼 가볍게 분리
+   ========================================================= */
+.content-grid{
+  position:relative;
+  z-index:1;
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:34px;
+}
+
+.section{
+  min-width:0;
+}
+
+.section-label{
+  margin:0 0 10px;
+
+  color:rgba(58,56,52,.55);
+
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.18em;
+}
+
+.article{
+  padding:16px 0 20px;
+
+  border-top:1px solid rgba(105,101,93,.13);
+}
+
+.article:first-of-type{
+  border-top:0;
+  padding-top:0;
+}
+
+.article h2{
+  margin:0 0 8px;
+
+  color:#2f2d29;
+
+  font-size:18px;
+  font-weight:600;
+  line-height:1.4;
+}
+
+.article-meta{
+  margin:0 0 10px;
+
+  color:rgba(77,74,68,.48);
+
+  font-size:9px;
+  letter-spacing:.06em;
+}
+
+.article p{
+  margin:0;
+
+  color:#4b4842;
+
+  font-size:13px;
+  line-height:1.85;
+}
+
+/* 샘플용 작은 빈 기사 슬롯 */
+.placeholder{
+  margin-top:20px;
+  padding:18px 0;
+
+  border-top:1px solid rgba(105,101,93,.10);
+
+  color:rgba(78,75,69,.42);
+
+  font-size:11px;
+  line-height:1.7;
+}
+
+/* 패널 외곽 클릭 가능 영역이 충분히 남도록 유지 */
+@media(max-width:800px){
+  body{
+    padding:3vh 3vw;
+    overflow:auto;
+  }
+
+  .paper{
+    width:94vw;
+    height:auto;
+    min-height:90vh;
+
+    padding:30px 24px 34px;
+  }
+
+  .content-grid{
+    grid-template-columns:1fr;
+    gap:28px;
+  }
+
+  .issue{
+    display:none;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{
+    transition:none!important;
+  }
+}
 </style>
 </head>
-<body id="body">
-<main class="paper" id="panel">
-<p class="code">LOUNGE READING MATERIAL</p><h1>NEWS &amp; STORY</h1><p class="sub">뉴스 및 단편 열람</p>
-<div class="grid"><section class="item"><h2>NEWS</h2><p>기사와 현장 소식을 배치할 영역입니다.</p></section><section class="item"><h2>SHORT STORY</h2><p>단편과 취재물을 배치할 영역입니다.</p></section></div>
-</main>
+
+<body id="loungeBody">
+
+  <main class="paper" id="loungePanel">
+
+    <header class="paper-header">
+
+      <div class="header-copy">
+        <p class="code">LOUNGE READING MATERIAL</p>
+        <h1>NEWS &amp; STORY</h1>
+        <p class="sub">뉴스 및 단편 열람</p>
+      </div>
+
+      <div class="issue">
+        PROJECT ARGO NOTE<br>
+        READING FILE
+      </div>
+
+    </header>
+
+    <div class="content-grid">
+
+      <section class="section">
+        <p class="section-label">NEWS</p>
+
+        <article class="article">
+          <h2>기사 제목 영역</h2>
+          <p class="article-meta">FIELD NEWS / DATE OR ISSUE</p>
+          <p>
+            현장 소식, 생활권 변화, 복구 사업, 거대 생물 관련 기사처럼
+            세계관 안에서 실제로 읽는 뉴스 콘텐츠를 배치하는 영역입니다.
+          </p>
+        </article>
+
+        <div class="placeholder">
+          다음 기사 또는 짧은 뉴스 항목이 들어갈 자리입니다.
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="section-label">SHORT STORY</p>
+
+        <article class="article">
+          <h2>단편 제목 영역</h2>
+          <p class="article-meta">SHORT STORY / TRAVEL NOTE</p>
+          <p>
+            짧은 단편, 취재 기록, 여행기, 인물 에피소드처럼
+            세계를 자연스럽게 보여주는 읽을거리를 배치하는 영역입니다.
+          </p>
+        </article>
+
+        <div class="placeholder">
+          다음 단편 또는 취재 기록이 들어갈 자리입니다.
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
 <script>
-const b=document.getElementById("body"),p=document.getElementById("panel");
-b.addEventListener("click",e=>{if(!p.contains(e.target)) parent.postMessage("ARGO_CLOSE_PANEL","*");});
-p.addEventListener("click",e=>e.stopPropagation());
+  const body = document.getElementById("loungeBody");
+  const panel = document.getElementById("loungePanel");
+
+  /* 종이 패널 외부를 클릭하면 MAIN으로 복귀 */
+  body.addEventListener("click", (event) => {
+    if (!panel.contains(event.target)) {
+      parent.postMessage("ARGO_CLOSE_PANEL", "*");
+    }
+  });
+
+  panel.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
 </script>
-</body></html>
+
+</body>
+</html>
