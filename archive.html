@@ -2,10 +2,12 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Archive</title>
+
 <style>
 *{box-sizing:border-box}
+
 html,body{
   margin:0;
   width:100%;
@@ -16,34 +18,35 @@ html,body{
   font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif;
 }
 
-/* 전체 iframe은 투명.
-   패널 바깥을 클릭하면 부모 MAIN에게 닫기 요청 */
 body{
   display:grid;
   place-items:center;
   padding:4.8vh 5.2vw;
 }
 
-/* 원하는 두 번째 이미지처럼:
-   중앙에만 반투명 청색 패널이 떠 있고
-   배경 일러스트는 네 면 모두에서 보인다. */
+/* =========================================================
+   ARCHIVE WINDOW
+   ========================================================= */
 .archive-window{
   position:relative;
+
   width:min(84vw,1480px);
   height:min(82vh,820px);
 
-  display:grid;
-  grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
-  gap:0;
+  display:flex;
+  flex-direction:column;
 
   overflow:hidden;
+
   border:1px solid rgba(145,215,250,.66);
   border-radius:10px;
 
   background:
-    linear-gradient(180deg,
+    linear-gradient(
+      180deg,
       rgba(18,72,104,.60),
-      rgba(9,40,61,.54));
+      rgba(9,40,61,.54)
+    );
 
   box-shadow:
     0 24px 90px rgba(0,0,0,.48),
@@ -54,278 +57,1095 @@ body{
   -webkit-backdrop-filter:blur(14px);
 }
 
-/* 아주 약한 중앙 분할선 */
-.archive-window::after{
-  content:"";
+/* =========================================================
+   TOP TAB BAR
+   ========================================================= */
+.archive-tabs{
+  flex:0 0 auto;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:15px 22px;
+
+  border-bottom:1px solid rgba(190,230,247,.14);
+
+  background:rgba(2,14,22,.11);
+}
+
+.archive-brand{
+  margin-right:auto;
+
+  color:rgba(218,237,246,.50);
+  font-size:9px;
+  letter-spacing:.17em;
+}
+
+.archive-tab{
+  padding:8px 14px;
+
+  border:1px solid rgba(190,230,247,.14);
+  border-radius:4px;
+
+  background:rgba(4,21,31,.14);
+  color:#c6d5dc;
+
+  font:inherit;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+
+  cursor:pointer;
+}
+
+.archive-tab:hover,
+.archive-tab:focus-visible{
+  border-color:rgba(160,222,250,.42);
+  outline:none;
+}
+
+.archive-tab.active{
+  background:rgba(62,150,191,.20);
+  border-color:rgba(135,218,255,.64);
+  color:#fff;
+}
+
+.archive-content{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+}
+
+/* =========================================================
+   WORLD VIEW
+   - 별도의 큰 "세계관" 제목은 두지 않는다.
+   - 짧은 문서 항목을 쌓아 읽는 구조.
+   ========================================================= */
+.world-view{
+  height:100%;
+  padding:26px 32px 34px;
+  overflow:auto;
+}
+
+.world-subtabs{
+  display:flex;
+  gap:8px;
+
+  margin-bottom:18px;
+  padding-bottom:12px;
+
+  border-bottom:1px solid rgba(190,230,247,.13);
+}
+
+.world-subtab{
+  padding:7px 12px;
+
+  border:0;
+  border-bottom:2px solid transparent;
+
+  background:transparent;
+  color:#9fb0ba;
+
+  font:inherit;
+  font-size:12px;
+
+  cursor:pointer;
+}
+
+.world-subtab:hover,
+.world-subtab:focus-visible{
+  color:#e8f3f8;
+  outline:none;
+}
+
+.world-subtab.active{
+  color:#fff;
+  border-bottom-color:rgba(130,214,255,.74);
+}
+
+.world-doc{
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.world-entry{
+  padding:16px 18px;
+
+  border:1px solid rgba(190,230,247,.10);
+  border-radius:5px;
+
+  background:rgba(2,13,20,.12);
+}
+
+.world-entry-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+
+  margin:0 0 7px;
+
+  color:#eaf4f8;
+  font-size:14px;
+  font-weight:600;
+}
+
+.world-entry-title::before{
+  content:"◆";
+  color:#79cfff;
+  font-size:8px;
+}
+
+.world-entry p{
+  margin:0;
+
+  color:#cad7dc;
+  font-size:13px;
+  line-height:1.8;
+}
+
+/* =========================================================
+   SETTINGS VIEW
+   좌측: "개념: 워프 장치", "사건: 외계 전쟁" 식 목록
+   우측: 이미지 + 텍스트
+   이미지와 글 사이에는 경계선을 두지 않는다.
+   ========================================================= */
+.setting-view{
+  height:100%;
+
+  display:grid;
+  grid-template-columns:280px 1fr;
+}
+
+.setting-index{
+  padding:24px 18px;
+
+  overflow:auto;
+
+  border-right:1px solid rgba(190,230,247,.13);
+}
+
+.setting-index-label{
+  margin:0 0 13px;
+  padding:0 8px;
+
+  color:rgba(216,235,244,.46);
+  font-size:9px;
+  letter-spacing:.17em;
+}
+
+.setting-button{
+  width:100%;
+
+  padding:12px 10px;
+
+  border:0;
+  border-bottom:1px solid rgba(190,230,247,.08);
+
+  background:transparent;
+  color:#bdccd3;
+
+  font:inherit;
+  font-size:12px;
+  line-height:1.5;
+  text-align:left;
+
+  cursor:pointer;
+}
+
+.setting-button:hover,
+.setting-button:focus-visible,
+.setting-button.active{
+  background:rgba(67,145,180,.13);
+  color:#fff;
+  outline:none;
+}
+
+.setting-detail{
+  padding:28px 34px 34px;
+
+  overflow:auto;
+}
+
+.setting-kicker{
+  margin:0 0 7px;
+
+  color:rgba(207,228,238,.48);
+  font-size:9px;
+  letter-spacing:.16em;
+}
+
+.setting-image{
+  position:relative;
+
+  width:100%;
+  aspect-ratio:16/8.3;
+
+  margin-bottom:22px;
+
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(29,74,98,.28),
+      rgba(5,25,37,.34)
+    );
+}
+
+.setting-image img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.setting-image-placeholder{
   position:absolute;
-  top:4%;
-  bottom:4%;
-  left:51.5%;
-  width:1px;
-  background:rgba(190,230,247,.17);
-  pointer-events:none;
+  inset:0;
+
+  display:grid;
+  place-items:center;
+
+  color:rgba(214,235,245,.38);
+  font-size:10px;
+  letter-spacing:.12em;
+}
+
+.setting-detail h1{
+  margin:0 0 10px;
+
+  color:#fff;
+  font-size:29px;
+  font-weight:600;
+}
+
+.setting-short{
+  margin:0 0 20px;
+
+  color:#d9e4e9;
+  font-size:14px;
+  line-height:1.8;
+}
+
+.setting-body{
+  color:#bdcbd1;
+  font-size:13px;
+  line-height:1.9;
+}
+
+.setting-body p{
+  margin:0 0 13px;
+}
+
+/* =========================================================
+   PERSONNEL ROSTER
+   대표 이미지 + 이름만 보여주는 명부.
+   별도 필터 버튼 없음.
+   ========================================================= */
+.personnel-roster{
+  height:100%;
+  padding:28px 30px 34px;
+  overflow:auto;
+}
+
+.roster-note{
+  margin:0 0 18px;
+
+  color:rgba(210,231,240,.52);
+  font-size:10px;
+  letter-spacing:.10em;
+}
+
+.roster-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+
+.roster-card{
+  position:relative;
+
+  min-height:220px;
+
+  overflow:hidden;
+
+  border:1px solid rgba(190,230,247,.13);
+  border-radius:5px;
+
+  background:rgba(2,13,20,.13);
+
+  cursor:pointer;
+
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    background .16s ease;
+}
+
+.roster-card:hover,
+.roster-card:focus-visible{
+  transform:translateY(-2px);
+  border-color:rgba(139,218,255,.46);
+  background:rgba(25,77,101,.18);
+  outline:none;
+}
+
+.roster-image{
+  width:100%;
+  aspect-ratio:16/10;
+
+  display:grid;
+  place-items:center;
+
+  overflow:hidden;
+
+  background:rgba(3,17,26,.28);
+}
+
+.roster-image img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.roster-placeholder{
+  color:rgba(212,232,241,.38);
+  font-size:10px;
+  letter-spacing:.10em;
+}
+
+.roster-name{
+  padding:13px 15px 14px;
+
+  color:#f0f6f8;
+  font-size:15px;
+  font-weight:600;
+}
+
+/* =========================================================
+   PERSONNEL DETAIL
+   ========================================================= */
+.personnel-detail{
+  height:100%;
+
+  display:grid;
+  grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
 }
 
 .viewer{
   min-width:0;
-  padding:38px 32px 28px 34px;
+
+  padding:28px 28px 24px;
+
   display:flex;
   flex-direction:column;
+
+  border-right:1px solid rgba(190,230,247,.15);
 }
 
 .viewer-main{
   position:relative;
+
   flex:1;
   min-height:0;
 
   display:grid;
   place-items:center;
 
-  border:1px solid rgba(190,230,247,.21);
+  overflow:hidden;
+
+  border:1px solid rgba(190,230,247,.19);
   border-radius:5px;
 
-  background:rgba(2,12,19,.28);
-  overflow:hidden;
+  background:rgba(2,12,19,.25);
 }
 
 .viewer-main::before{
   content:"PERSONNEL IMAGE VIEWER";
+
   position:absolute;
-  left:18px;
-  top:15px;
-  color:rgba(220,238,246,.46);
-  font-size:10px;
-  letter-spacing:.20em;
+  left:16px;
+  top:13px;
+
+  color:rgba(220,238,246,.43);
+  font-size:9px;
+  letter-spacing:.18em;
 }
 
-.placeholder-figure{
-  width:46%;
-  max-width:320px;
-  aspect-ratio:0.58;
-  border:1px dashed rgba(195,228,242,.25);
-  display:grid;
-  place-items:center;
-  color:rgba(221,235,241,.48);
-  font-size:12px;
+.viewer-main img{
+  display:block;
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+
+.detail-placeholder{
+  color:rgba(221,235,241,.46);
+  font-size:11px;
   letter-spacing:.08em;
 }
 
 .thumb-row{
-  height:86px;
-  margin-top:12px;
+  height:72px;
+  margin-top:10px;
 
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  gap:9px;
+  gap:8px;
 }
 
 .thumb{
   display:grid;
   place-items:center;
-  border:1px solid rgba(195,228,242,.17);
+
+  border:1px solid rgba(195,228,242,.16);
   border-radius:4px;
-  background:rgba(4,18,27,.24);
+
+  background:rgba(4,18,27,.22);
   color:#cbd9df;
-  font-size:11px;
+
+  font-size:10px;
+
+  cursor:pointer;
 }
 
 .thumb.active{
-  border-color:rgba(128,216,255,.74);
-  box-shadow:0 0 13px rgba(89,194,240,.16);
-  background:rgba(43,116,150,.22);
+  border-color:rgba(128,216,255,.72);
+  background:rgba(43,116,150,.20);
 }
 
 .profile{
   min-width:0;
-  padding:48px 46px 34px 38px;
+
+  padding:32px 36px 28px;
+
   overflow:auto;
+}
+
+.back-roster{
+  margin:0 0 18px;
+  padding:6px 0;
+
+  border:0;
+  background:transparent;
+  color:#a9c1cd;
+
+  font:inherit;
+  font-size:10px;
+  letter-spacing:.08em;
+
+  cursor:pointer;
+}
+
+.back-roster:hover{
+  color:#fff;
 }
 
 .profile-name{
   display:flex;
   align-items:baseline;
-  gap:15px;
-  margin:0 0 13px;
+  gap:13px;
+
+  margin:0 0 11px;
 }
 
 .profile-name h1{
   margin:0;
+
   color:#fff;
-  font-size:clamp(28px,2.6vw,43px);
+  font-size:36px;
   font-weight:600;
-  letter-spacing:-.02em;
 }
 
 .meta{
   color:#aebdc5;
-  font-size:14px;
+  font-size:12px;
 }
 
 .quote{
-  margin:0 0 34px;
-  padding-left:12px;
-  border-left:2px solid rgba(113,203,245,.72);
+  margin:0 0 25px;
+  padding-left:11px;
+
+  border-left:2px solid rgba(113,203,245,.68);
+
   color:#d1dbe0;
-  font-size:15px;
+  font-size:14px;
   font-style:italic;
 }
 
 .info-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  column-gap:50px;
-  row-gap:17px;
-  margin-bottom:17px;
+
+  column-gap:40px;
+  row-gap:14px;
 }
 
-.info-pair{
+.info-pair,
+.info-wide{
   display:grid;
-  grid-template-columns:58px 1fr;
-  gap:10px;
+  grid-template-columns:54px 1fr;
+  gap:9px;
 }
 
 .info-wide{
-  display:grid;
-  grid-template-columns:58px 1fr;
-  gap:10px;
-  margin-top:17px;
+  margin-top:14px;
 }
 
 .label{
   color:#9eb0ba;
-  font-size:13px;
+  font-size:12px;
 }
 
 .value{
   color:#f0f4f6;
-  font-size:14px;
+  font-size:13px;
   line-height:1.6;
 }
 
 .divider{
-  margin:28px 0 20px;
+  margin:23px 0 17px;
   height:1px;
-  background:rgba(216,235,244,.36);
+
+  background:rgba(216,235,244,.34);
 }
 
 .summary{
   margin:0;
+
   color:#d9e1e5;
-  font-size:14px;
+  font-size:13px;
   line-height:1.9;
 }
 
-/* archive 첫 화면용 작은 상단 탭.
-   나중에 PERSONNEL 목록 화면으로 교체 가능 */
-.archive-mark{
-  position:absolute;
-  left:20px;
-  top:16px;
-  z-index:4;
-  color:rgba(220,238,247,.58);
-  font-size:10px;
-  letter-spacing:.18em;
-  pointer-events:none;
-}
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media(max-width:920px){
+  body{
+    padding:3vh 3vw;
+    overflow:auto;
+  }
 
-@media(max-width:950px){
-  body{padding:3vh 3vw;overflow:auto}
   .archive-window{
     width:94vw;
     height:auto;
     min-height:90vh;
+  }
+
+  .archive-tabs{
+    flex-wrap:wrap;
+  }
+
+  .archive-brand{
+    width:100%;
+  }
+
+  .setting-view,
+  .personnel-detail{
     grid-template-columns:1fr;
   }
-  .archive-window::after{display:none}
-  .viewer{min-height:520px}
-  .profile{padding-top:24px}
+
+  .setting-index,
+  .viewer{
+    border-right:0;
+    border-bottom:1px solid rgba(190,230,247,.15);
+  }
+
+  .roster-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .viewer{
+    min-height:500px;
+  }
+}
+
+@media(max-width:620px){
+  .roster-grid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
+
 <body id="archiveBody">
 
-  <section class="archive-window" id="archiveWindow">
-    <div class="archive-mark">SEOUL RESTORATION NETWORK / PERSONNEL DATABASE</div>
+<main class="archive-window" id="archiveWindow">
 
-    <section class="viewer">
-      <div class="viewer-main">
-        <div class="placeholder-figure">CHARACTER IMAGE</div>
-      </div>
+  <nav class="archive-tabs">
+    <div class="archive-brand">SEOUL RESTORATION NETWORK / ARCHIVE</div>
 
-      <div class="thumb-row">
-        <div class="thumb active">01</div>
-        <div class="thumb">02</div>
-        <div class="thumb">03</div>
-        <div class="thumb">04</div>
-        <div class="thumb">SHEET</div>
-      </div>
-    </section>
+    <button class="archive-tab active" data-view="world" type="button">세계관</button>
+    <button class="archive-tab" data-view="setting" type="button">설정</button>
+    <button class="archive-tab" data-view="personnel" type="button">인물</button>
+  </nav>
 
-    <section class="profile">
-      <div class="profile-name">
-        <h1>인물명</h1>
-        <span class="meta">(연령 / 성별)</span>
-      </div>
+  <section class="archive-content" id="archiveContent"></section>
 
-      <p class="quote">“대표 대사가 표시되는 영역입니다.”</p>
-
-      <div class="info-grid">
-        <div class="info-pair">
-          <span class="label">분류</span>
-          <span class="value">종족</span>
-        </div>
-        <div class="info-pair">
-          <span class="label">출신</span>
-          <span class="value">출신국 / 행성</span>
-        </div>
-
-        <div class="info-pair">
-          <span class="label">직업</span>
-          <span class="value">직업</span>
-        </div>
-        <div class="info-pair">
-          <span class="label">소속</span>
-          <span class="value">기업 / 조직 / 입장</span>
-        </div>
-      </div>
-
-      <div class="info-wide">
-        <span class="label">외모</span>
-        <span class="value">간략한 외형적 특징</span>
-      </div>
-
-      <div class="info-wide">
-        <span class="label">복장</span>
-        <span class="value">A. 기본 복장<br>B. 현장 활동복<br>C. 기타 복장</span>
-      </div>
-
-      <div class="info-wide">
-        <span class="label">특기</span>
-        <span class="value">본인이 실제로 잘하는 일이나 개인적 특기</span>
-      </div>
-
-      <div class="divider"></div>
-
-      <p class="summary">
-        이곳에는 2~3문장 정도의 간략한 인물 소개글이 들어갑니다.
-        상세 설정 전체를 한 번에 노출하기보다, 인물의 역할과 성격을 빠르게 파악할 수 있는 요약문을 배치하는 형태입니다.
-      </p>
-    </section>
-  </section>
+</main>
 
 <script>
-  const archiveBody = document.getElementById("archiveBody");
-  const archiveWindow = document.getElementById("archiveWindow");
-
-  archiveBody.addEventListener("click", (event) => {
-    if (!archiveWindow.contains(event.target)) {
-      parent.postMessage("ARGO_CLOSE_PANEL", "*");
+/* =========================================================
+   WORLD DATA
+   짧은 1~2문장 요약을 넣는 영역
+   ========================================================= */
+const WORLD_DATA = {
+  background: [
+    {
+      title:"시대와 지구",
+      text:"대재해와 외계 전쟁을 거친 뒤에도 지구에는 여러 도시와 생활권이 남아 있다. 복구와 우주 이주가 동시에 진행되는 시대다."
+    },
+    {
+      title:"서울 생활권",
+      text:"서울의 안정적인 생활권은 과거보다 축소되어 있으며, 지하 시설 복구와 지상 안전 구역 확장이 장기간 이어지고 있다."
+    },
+    {
+      title:"거대 생태",
+      text:"동물의 거대화는 전 지구적 현상으로 자리 잡았다. 인간은 퇴치보다 이동 경로와 서식지 조정을 통해 공존 범위를 넓히고 있다."
     }
+  ],
+  concept: [
+    {
+      title:"중력권",
+      text:"워프와 우주 이동 기술에서 중요한 기준이 되는 물리적 영역. 같은 중력권 안과 서로 다른 중력권 사이의 이동 방식이 구분된다."
+    },
+    {
+      title:"워프",
+      text:"외계 기술을 기반으로 발전한 공간 이동 기술. 일반적인 장거리 이동은 대형 장치와 정밀한 좌표 계산을 필요로 한다."
+    },
+    {
+      title:"복구 사업",
+      text:"지하 시설과 노후 기반 구조를 장기간에 걸쳐 보강해 안전한 생활권을 넓히는 도시 프로젝트다."
+    }
+  ],
+  group: [
+    {
+      title:"서울시 복구 사업",
+      text:"서울시와 여러 기업이 공동으로 진행하는 장기 복구 사업. 지하철과 지하 기반 시설의 회복이 주요 축이다."
+    },
+    {
+      title:"이스 출판사",
+      text:"우주에 본사를 둔 출판사. 지구와 우주 각지의 여행, 사회, 생태 관련 취재와 기록을 수행한다."
+    },
+    {
+      title:"PANTREE",
+      text:"임업을 기반으로 성장한 대기업. 우주 시대에도 살아 있는 나무와 산림 자원의 가치가 높아지며 영향력을 유지하고 있다."
+    }
+  ]
+};
+
+/* =========================================================
+   SETTING DATA
+   image에 실제 파일 경로를 넣으면 자동 표시.
+   ========================================================= */
+const SETTING_DATA = [
+  {
+    label:"개념: 워프 장치",
+    type:"CONCEPT",
+    title:"워프 장치",
+    image:"",
+    short:"중력권과 공간 좌표를 이용해 장거리 이동을 가능하게 하는 대형 이동 장치.",
+    body:[
+      "일반 사용자가 직접 공간 좌표를 계산하고 워프를 실행하기는 어렵기 때문에 대형 설비와 제어 시스템이 필요하다.",
+      "서로 다른 중력권 사이의 이동에는 별도의 절차와 장치가 사용된다."
+    ]
+  },
+  {
+    label:"사건: 외계 전쟁",
+    type:"INCIDENT",
+    title:"외계 전쟁",
+    image:"",
+    short:"인류가 외계 문명과 직접 충돌하면서 지구 환경과 기술 체계가 크게 변화한 사건.",
+    body:[
+      "전쟁 이후 인류는 외계 기술 일부를 확보했지만 지구 곳곳에는 거대한 환경 변화와 파괴 흔적이 남았다.",
+      "현재의 우주 이동 기술과 여러 복구 사업 역시 이 사건의 후속 결과와 연결된다."
+    ]
+  },
+  {
+    label:"시설: 서울 복구 거점",
+    type:"FACILITY",
+    title:"서울 복구 거점",
+    image:"",
+    short:"지하철 역사 내부를 개조해 만들어진 현장 작업자와 기술진의 생활·관리 거점.",
+    body:[
+      "반지하 개찰구층을 넓게 정리해 사무실, 장비 창고, 휴게실, 작업 통로를 배치했다.",
+      "복구 진행 상황에 따라 역사 내부의 사용 가능 구역도 점차 늘어난다."
+    ]
+  }
+];
+
+/* =========================================================
+   PERSONNEL DATA
+   대표 이미지만 우선 넣을 수 있도록 구성.
+   gallery는 상세 페이지 이미지 뷰어용.
+   ========================================================= */
+const PERSONNEL_DATA = [
+  {
+    name:"ARGO",
+    cover:"",
+    gallery:[],
+    age:"21세",
+    gender:"-",
+    quote:"대표 대사",
+    species:"인간",
+    origin:"지구",
+    job:"프리랜서 사진기자",
+    affiliation:"이스 출판사 협력",
+    appearance:"간략한 외형적 특징",
+    outfits:["기본 복장","현장 활동복"],
+    specialty:"사진 촬영과 현장 기록",
+    summary:"세계를 넓게 이동하며 변화하는 지구를 기록하는 사진기자. 여행과 취재를 통해 다양한 장소와 사람의 기록을 남긴다."
+  },
+  {
+    name:"PLOX",
+    cover:"",
+    gallery:[],
+    age:"60세 이상",
+    gender:"여성",
+    quote:"대표 대사",
+    species:"인간",
+    origin:"지구",
+    job:"여행팀 팀장·편집장",
+    affiliation:"이스 출판사",
+    appearance:"은백색 장발과 푸른 눈",
+    outfits:["기본 정장","현장 활동복"],
+    specialty:"언어, 취재, 정보 수집",
+    summary:"이스 출판사의 여행팀을 이끄는 편집장이자 회장 직속 보좌관. 장난스러운 태도와 뛰어난 실무 능력을 함께 지닌 인물이다."
+  },
+  {
+    name:"MEARI",
+    cover:"",
+    gallery:[],
+    age:"20세",
+    gender:"여성",
+    quote:"대표 대사",
+    species:"인간",
+    origin:"지구",
+    job:"여행자",
+    affiliation:"개인",
+    appearance:"긴 밝은 머리와 청록색 눈",
+    outfits:["여행복","야외 복장","경량 복장"],
+    specialty:"여행 계획과 기록",
+    summary:"다양한 풍경과 사람을 만나며 세상을 넓혀가는 젊은 여행자. 계획을 세워 느리게 여행하고 경험을 기록으로 남긴다."
+  },
+  {
+    name:"IRA",
+    cover:"",
+    gallery:[],
+    age:"-",
+    gender:"여성",
+    quote:"대표 대사",
+    species:"인간",
+    origin:"지구",
+    job:"기술자",
+    affiliation:"외부 기술 인력",
+    appearance:"간략한 외형적 특징",
+    outfits:["작업복","외출복"],
+    specialty:"기계·설비 기술",
+    summary:"현장 작업을 선호하는 조용한 기술자. 서울 복구 사업에서는 외부 기술 지원을 위해 단기 출장 형태로 등장한다."
+  }
+];
+
+const archiveBody = document.getElementById("archiveBody");
+const archiveWindow = document.getElementById("archiveWindow");
+const archiveContent = document.getElementById("archiveContent");
+const tabs = [...document.querySelectorAll(".archive-tab")];
+
+/* =========================================================
+   WORLD RENDER
+   ========================================================= */
+function renderWorld(){
+  archiveContent.innerHTML = `
+    <section class="world-view">
+      <nav class="world-subtabs">
+        <button class="world-subtab active" data-world="background" type="button">배경</button>
+        <button class="world-subtab" data-world="concept" type="button">개념</button>
+        <button class="world-subtab" data-world="group" type="button">집단</button>
+      </nav>
+
+      <div class="world-doc" id="worldDoc"></div>
+    </section>
+  `;
+
+  const worldDoc = document.getElementById("worldDoc");
+
+  function showWorld(key){
+    worldDoc.innerHTML = WORLD_DATA[key].map(item=>`
+      <article class="world-entry">
+        <h2 class="world-entry-title">${item.title}</h2>
+        <p>${item.text}</p>
+      </article>
+    `).join("");
+
+    archiveContent.querySelectorAll(".world-subtab").forEach(button=>{
+      button.classList.toggle("active",button.dataset.world===key);
+    });
+  }
+
+  archiveContent.querySelectorAll(".world-subtab").forEach(button=>{
+    button.addEventListener("click",()=>showWorld(button.dataset.world));
   });
 
-  archiveWindow.addEventListener("click", (event) => {
-    event.stopPropagation();
+  showWorld("background");
+}
+
+/* =========================================================
+   SETTING RENDER
+   ========================================================= */
+function renderSetting(){
+  archiveContent.innerHTML = `
+    <section class="setting-view">
+
+      <aside class="setting-index">
+        <p class="setting-index-label">ARCHIVE INDEX</p>
+
+        ${SETTING_DATA.map((item,index)=>`
+          <button
+            class="setting-button ${index===0 ? "active" : ""}"
+            type="button"
+            data-index="${index}"
+          >
+            ${item.label}
+          </button>
+        `).join("")}
+      </aside>
+
+      <article class="setting-detail" id="settingDetail"></article>
+
+    </section>
+  `;
+
+  const detail = document.getElementById("settingDetail");
+
+  function showSetting(index){
+    const item = SETTING_DATA[index];
+
+    detail.innerHTML = `
+      <p class="setting-kicker">${item.type}</p>
+
+      <div class="setting-image">
+        ${
+          item.image
+            ? `<img src="${item.image}" alt="${item.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">`
+            : ``
+        }
+        <div
+          class="setting-image-placeholder"
+          style="${item.image ? "display:none;" : ""}"
+        >
+          SETTING IMAGE
+        </div>
+      </div>
+
+      <h1>${item.title}</h1>
+      <p class="setting-short">${item.short}</p>
+
+      <div class="setting-body">
+        ${item.body.map(p=>`<p>${p}</p>`).join("")}
+      </div>
+    `;
+  }
+
+  archiveContent.querySelectorAll(".setting-button").forEach(button=>{
+    button.addEventListener("click",()=>{
+      archiveContent.querySelectorAll(".setting-button").forEach(b=>b.classList.remove("active"));
+      button.classList.add("active");
+      showSetting(Number(button.dataset.index));
+    });
   });
+
+  showSetting(0);
+}
+
+/* =========================================================
+   PERSONNEL ROSTER
+   ========================================================= */
+function renderPersonnelRoster(){
+  archiveContent.innerHTML = `
+    <section class="personnel-roster">
+      <p class="roster-note">REGISTERED PERSONNEL / 명부에 등록된 인원</p>
+
+      <div class="roster-grid">
+
+        ${PERSONNEL_DATA.map((person,index)=>`
+          <button class="roster-card" type="button" data-index="${index}">
+
+            <div class="roster-image">
+              ${
+                person.cover
+                  ? `<img src="${person.cover}" alt="${person.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`
+                  : ``
+              }
+
+              <span
+                class="roster-placeholder"
+                style="${person.cover ? "display:none;" : ""}"
+              >
+                REPRESENTATIVE IMAGE
+              </span>
+            </div>
+
+            <div class="roster-name">${person.name}</div>
+
+          </button>
+        `).join("")}
+
+      </div>
+    </section>
+  `;
+
+  archiveContent.querySelectorAll(".roster-card").forEach(card=>{
+    card.addEventListener("click",()=>{
+      renderPersonnelDetail(Number(card.dataset.index));
+    });
+  });
+}
+
+/* =========================================================
+   PERSONNEL DETAIL
+   ========================================================= */
+function renderPersonnelDetail(index){
+  const person = PERSONNEL_DATA[index];
+
+  const gallery = person.gallery.length
+    ? person.gallery
+    : [null,null,null,null,null];
+
+  archiveContent.innerHTML = `
+    <section class="personnel-detail">
+
+      <section class="viewer">
+        <div class="viewer-main" id="viewerMain">
+          ${
+            gallery[0]
+              ? `<img src="${gallery[0]}" alt="${person.name}">`
+              : `<span class="detail-placeholder">CHARACTER IMAGE</span>`
+          }
+        </div>
+
+        <div class="thumb-row">
+          ${gallery.slice(0,5).map((img,i)=>`
+            <button class="thumb ${i===0 ? "active" : ""}" type="button" data-index="${i}">
+              ${i===4 ? "SHEET" : String(i+1).padStart(2,"0")}
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="profile">
+
+        <button class="back-roster" id="backRoster" type="button">
+          ← PERSONNEL LIST
+        </button>
+
+        <div class="profile-name">
+          <h1>${person.name}</h1>
+          <span class="meta">(${person.age} / ${person.gender})</span>
+        </div>
+
+        <p class="quote">“${person.quote}”</p>
+
+        <div class="info-grid">
+          <div class="info-pair">
+            <span class="label">분류</span>
+            <span class="value">${person.species}</span>
+          </div>
+
+          <div class="info-pair">
+            <span class="label">출신</span>
+            <span class="value">${person.origin}</span>
+          </div>
+
+          <div class="info-pair">
+            <span class="label">직업</span>
+            <span class="value">${person.job}</span>
+          </div>
+
+          <div class="info-pair">
+            <span class="label">소속</span>
+            <span class="value">${person.affiliation}</span>
+          </div>
+        </div>
+
+        <div class="info-wide">
+          <span class="label">외모</span>
+          <span class="value">${person.appearance}</span>
+        </div>
+
+        <div class="info-wide">
+          <span class="label">복장</span>
+          <span class="value">${person.outfits.map((x,i)=>`${String.fromCharCode(65+i)}. ${x}`).join("<br>")}</span>
+        </div>
+
+        <div class="info-wide">
+          <span class="label">특기</span>
+          <span class="value">${person.specialty}</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <p class="summary">${person.summary}</p>
+
+      </section>
+
+    </section>
+  `;
+
+  document.getElementById("backRoster").addEventListener("click",renderPersonnelRoster);
+
+  const viewerMain = document.getElementById("viewerMain");
+  const thumbs = [...archiveContent.querySelectorAll(".thumb")];
+
+  thumbs.forEach(button=>{
+    button.addEventListener("click",()=>{
+      const i = Number(button.dataset.index);
+
+      thumbs.forEach(b=>b.classList.remove("active"));
+      button.classList.add("active");
+
+      if(gallery[i]){
+        viewerMain.innerHTML = `<img src="${gallery[i]}" alt="${person.name}">`;
+      }else{
+        viewerMain.innerHTML = `<span class="detail-placeholder">CHARACTER IMAGE</span>`;
+      }
+    });
+  });
+}
+
+/* =========================================================
+   MAIN ARCHIVE TAB
+   ========================================================= */
+function switchArchive(view){
+  tabs.forEach(tab=>{
+    tab.classList.toggle("active",tab.dataset.view===view);
+  });
+
+  if(view==="world") renderWorld();
+  if(view==="setting") renderSetting();
+  if(view==="personnel") renderPersonnelRoster();
+}
+
+tabs.forEach(tab=>{
+  tab.addEventListener("click",()=>switchArchive(tab.dataset.view));
+});
+
+/* 패널 외부 클릭 → MAIN */
+archiveBody.addEventListener("click",(event)=>{
+  if(!archiveWindow.contains(event.target)){
+    parent.postMessage("ARGO_CLOSE_PANEL","*");
+  }
+});
+
+archiveWindow.addEventListener("click",(event)=>{
+  event.stopPropagation();
+});
+
+switchArchive("world");
 </script>
+
 </body>
 </html>
