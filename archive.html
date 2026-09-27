@@ -7,35 +7,85 @@
 <style>
 *{box-sizing:border-box}
 html,body{
-  margin:0;width:100%;min-height:100%;background:transparent;color:#edf3f6;
+  margin:0;width:100%;height:100%;background:transparent;color:#edf3f6;
   font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif
 }
-body{padding:34px}
+body{
+  padding:0;
+  background:
+    linear-gradient(rgba(6,16,24,.46), rgba(6,16,24,.46));
+}
+.page{
+  width:100%;height:100%;padding:20px;
+}
 .panel{
-  min-height:calc(100vh - 68px);padding:34px 38px;
-  background:rgba(36,85,118,.34);
-  border:1px solid rgba(175,225,255,.36);
+  width:100%;height:100%;
+  padding:42px 40px;
+  background:linear-gradient(180deg, rgba(12,48,72,.54), rgba(8,32,50,.46));
+  border:1px solid rgba(170,225,255,.34);
   border-radius:8px;
-  box-shadow:inset 0 0 40px rgba(80,170,220,.04),0 0 34px rgba(80,170,220,.08);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)
+  box-shadow:
+    inset 0 0 34px rgba(120,210,255,.06),
+    0 0 24px rgba(90,180,220,.10);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
 }
-.eyebrow{margin:0 0 6px;color:#a8b8c1;font-size:11px;letter-spacing:.24em}
-h1{margin:0;font-size:clamp(30px,4vw,54px);font-weight:500}
-.sub{margin:10px 0 34px;color:#c5d0d6;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.eyebrow{
+  margin:0 0 8px;
+  color:#c3d3dc;
+  font-size:11px;
+  letter-spacing:.28em
+}
+h1{
+  margin:0;
+  font-size:clamp(22px,2.8vw,38px);
+  font-weight:600;
+  letter-spacing:.01em
+}
+.sub{
+  margin:14px 0 32px;
+  color:#d4dde2;
+  font-size:13px
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px
+}
 .card{
-  min-height:180px;padding:22px;border:1px solid rgba(200,230,245,.18);
-  background:rgba(3,11,16,.22);color:inherit;text-decoration:none
+  min-height:180px;
+  padding:22px;
+  border:1px solid rgba(200,230,245,.16);
+  background:rgba(3,16,24,.16);
+  color:inherit;
+  text-decoration:none;
+  transition:background .16s ease, border-color .16s ease, transform .16s ease
 }
-.card:hover{background:rgba(40,100,132,.28);border-color:rgba(200,235,250,.42)}
-.card strong{display:block;margin-bottom:12px;font-size:20px;font-weight:500}
-.card span{color:#c4d0d6;line-height:1.7;font-size:13px}
-@media(max-width:850px){
-  body{padding:18px}.panel{min-height:calc(100vh - 36px);padding:24px}.grid{grid-template-columns:1fr}
+.card:hover{
+  background:rgba(40,100,132,.22);
+  border-color:rgba(200,235,250,.36);
+  transform:translateY(-2px)
+}
+.card strong{
+  display:block;
+  margin-bottom:12px;
+  font-size:18px;
+  font-weight:600
+}
+.card span{
+  color:#d0d9de;
+  line-height:1.75;
+  font-size:13px
+}
+@media(max-width:900px){
+  .page{padding:14px}
+  .panel{padding:26px 20px}
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
+<div class="page">
 <section class="panel">
   <p class="eyebrow">SEOUL RESTORATION NETWORK / OFFICE</p>
   <h1>ARCHIVE</h1>
@@ -56,5 +106,6 @@ h1{margin:0;font-size:clamp(30px,4vw,54px);font-weight:500}
     </a>
   </div>
 </section>
+</div>
 </body>
 </html>
