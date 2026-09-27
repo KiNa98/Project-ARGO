@@ -129,56 +129,60 @@
     .panel-random-bg{
       position:absolute;inset:0;z-index:0;
       background-position:center;background-size:cover;background-repeat:no-repeat;
-      opacity:.75;transform:scale(1.012);
+      opacity:.50;transform:scale(1.012);
       transition:opacity .24s ease,transform .5s ease
     }
     .panel-overlay.active .panel-random-bg{transform:scale(1)}
 
     .panel-dimmer{
       position:absolute;inset:0;z-index:1;
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(0,0,0,.16) 0%,
-      rgba(0,0,0,.28) 58%,
-      rgba(0,0,0,.42) 100%
-    );
+      background:
+        radial-gradient(circle at center,
+          rgba(0,0,0,.32) 0%,
+          rgba(0,0,0,.48) 58%,
+          rgba(0,0,0,.62) 100%);
+      pointer-events:none
+    }
 
-    /* 더 이상 보이는 검은 직사각형 패널을 만들지 않는다.
-    */.panel-shell{
-  position:absolute;
-  inset:0;
-  z-index:3;
+    /* 더 이상 보이는 검은 직사각형 패널을 만들지 않는다. */
+    .panel-shell{
+      position:absolute;
+      inset:0;
+      z-index:3;
 
-  width:100vw;
-  height:100vh;
+      width:100vw;
+      height:100vh;
 
-  margin:0;
-  padding:0;
+      margin:0;
+      padding:0;
 
-  background:transparent;
-  border:0;
-  box-shadow:none;
-  overflow:hidden;
-}
+      background:transparent;
+      border:0;
+      box-shadow:none;
+      overflow:hidden;
+    }
 
-.panel-frame{
-  position:absolute;
-  inset:0;
+    /*
+      iframe의 브라우저 기본 크기(300×150)로 돌아가는 현상을 방지하기 위해
+      부모와 iframe 양쪽 모두 viewport 크기를 명시한다.
+    */
+    .panel-frame{
+      position:absolute;
+      inset:0;
 
-  display:block;
+      display:block;
 
-  width:100vw;
-  height:100vh;
-  min-width:100vw;
-  min-height:100vh;
+      width:100vw;
+      height:100vh;
+      min-width:100vw;
+      min-height:100vh;
 
-  margin:0;
-  padding:0;
+      margin:0;
+      padding:0;
 
-  border:0;
-  background:transparent;
-}
+      border:0;
+      background:transparent;
+    }
 
     .panel-close{
       position:fixed;
@@ -271,7 +275,7 @@
   </section>
 
   <script>
-    const PANEL_BACKGROUNDS = [
+    const PANEL_BACKGROUND_CANDIDATES = [
       "images/BBG_01.jpg",
       "images/BBG_02.jpg",
       "images/BBG_03.jpg",
@@ -280,6 +284,13 @@
       "images/BBG_06.jpg",
       "images/BBG_07.jpg"
     ];
+
+    /*
+      실제로 존재하고 정상 로드되는 BBG 파일만 여기에 남긴다.
+      예를 들어 BBG_01~05만 업로드되어 있어도 06/07은 자동 제외된다.
+    */
+    let availablePanelBackgrounds = [];
+    let backgroundCheckPromise = null;
 
     const PANEL_PAGES = {
       archive: "archive.html",
@@ -300,9 +311,37 @@
     const panelRandomBg = document.getElementById("panelRandomBg");
 
     let toastTimer;
-    let lastBackgroundIndex = -1;
+    let lastBackgroundPath = null;
+
+    function checkBackgroundFile(path) {
+      return new Promise((resolve) => {
+        const img = new Image();
+
+        img.onload = () => resolve(path);
+        img.onerror = () => resolve(null);
+
+        /* 브라우저 캐시를 그대로 사용하면서 파일 존재 여부를 확인 */
+        img.src = path;
+      });
+    }
+
+    function preparePanelBackgrounds() {
+      if (!backgroundCheckPromise) {
+        backgroundCheckPromise = Promise
+          .all(PANEL_BACKGROUND_CANDIDATES.map(checkBackgroundFile))
+          .then((results) => {
+            availablePanelBackgrounds = results.filter(Boolean);
+            return availablePanelBackgrounds;
+          });
+      }
+
+      return backgroundCheckPromise;
+    }
 
     window.addEventListener("load", () => {
+      /* 패널을 열기 전에 실제 존재하는 BBG 파일을 미리 확인한다. */
+      preparePanelBackgrounds();
+
       setTimeout(() => entryCurtain.classList.add("hide"), 120);
       setTimeout(() => mainHint.classList.add("show"), 650);
       setTimeout(() => mainHint.classList.remove("show"), 4300);
@@ -322,8 +361,9 @@
       });
     });
 
-    function openPanel(page){
-      setRandomPanelBackground();
+    async function openPanel(page){
+      await setRandomPanelBackground();
+
       panelFrame.src = page;
       panelOverlay.classList.add("active");
       panelOverlay.setAttribute("aria-hidden","false");
@@ -342,17 +382,33 @@
       },240);
     }
 
-    function setRandomPanelBackground(){
-      if (!PANEL_BACKGROUNDS.length) return;
-      let index;
-      if (PANEL_BACKGROUNDS.length === 1) index = 0;
-      else {
-        do {
-          index = Math.floor(Math.random() * PANEL_BACKGROUNDS.length);
-        } while(index === lastBackgroundIndex);
+    async function setRandomPanelBackground(){
+      const backgrounds = await preparePanelBackgrounds();
+
+      /*
+        사용 가능한 이미지가 하나도 없으면 검은 배경을 유지한다.
+        없는 파일을 골라 빈 화면이 뜨는 현상은 발생하지 않는다.
+      */
+      if (!backgrounds.length) {
+        panelRandomBg.style.backgroundImage = "none";
+        lastBackgroundPath = null;
+        return;
       }
-      lastBackgroundIndex = index;
-      panelRandomBg.style.backgroundImage = `url("${PANEL_BACKGROUNDS[index]}")`;
+
+      let selected;
+
+      if (backgrounds.length === 1) {
+        selected = backgrounds[0];
+      } else {
+        do {
+          selected = backgrounds[
+            Math.floor(Math.random() * backgrounds.length)
+          ];
+        } while (selected === lastBackgroundPath);
+      }
+
+      lastBackgroundPath = selected;
+      panelRandomBg.style.backgroundImage = `url("${selected}")`;
     }
 
     panelClose.addEventListener("click", closePanel);
