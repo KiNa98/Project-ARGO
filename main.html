@@ -109,59 +109,93 @@
     }
     .main-hint.show,.toast.show{opacity:1;transform:translate(-50%,0)}
 
+    /* =========================================================
+       PANEL OVERLAY
+       핵심 수정:
+       - 외곽 panel-shell을 '창'으로 보이게 하지 않음
+       - iframe은 사실상 전체 화면 투명 레이어
+       - 실제 패널 모양은 각 내부 페이지가 담당
+       ========================================================= */
     .panel-overlay{
-      position:fixed;inset:0;z-index:2000;display:grid;place-items:center;
-      visibility:hidden;opacity:0;pointer-events:none;background:rgba(0,0,0,.72);
+      position:fixed;inset:0;z-index:2000;
+      visibility:hidden;opacity:0;pointer-events:none;
+      background:#000;
       transition:opacity .22s ease,visibility .22s ease
     }
-    .panel-overlay.active{visibility:visible;opacity:1;pointer-events:auto}
+    .panel-overlay.active{
+      visibility:visible;opacity:1;pointer-events:auto
+    }
 
     .panel-random-bg{
-      position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;
-      background-repeat:no-repeat;opacity:.42;transform:scale(1.015);
+      position:absolute;inset:0;z-index:0;
+      background-position:center;background-size:cover;background-repeat:no-repeat;
+      opacity:.50;transform:scale(1.012);
       transition:opacity .24s ease,transform .5s ease
     }
     .panel-overlay.active .panel-random-bg{transform:scale(1)}
 
     .panel-dimmer{
       position:absolute;inset:0;z-index:1;
-      background:radial-gradient(circle at center,rgba(0,0,0,.34) 0%,rgba(0,0,0,.55) 58%,rgba(0,0,0,.72) 100%);
+      background:
+        radial-gradient(circle at center,
+          rgba(0,0,0,.32) 0%,
+          rgba(0,0,0,.48) 58%,
+          rgba(0,0,0,.62) 100%);
       pointer-events:none
     }
 
+    /* 더 이상 보이는 검은 직사각형 패널을 만들지 않는다. */
     .panel-shell{
-      position:relative;z-index:3;width:min(96vw,1620px);height:min(93vh,960px);
-      border:1px solid rgba(190,225,235,.26);border-radius:10px;
+      position:absolute;
+      inset:0;
+      z-index:3;
       background:transparent;
-      box-shadow:0 18px 70px rgba(0,0,0,.42), inset 0 0 0 1px rgba(255,255,255,.03);
-      overflow:hidden;transform:scale(.985);opacity:0;
-      transition:transform .22s ease,opacity .22s ease
+      border:0;
+      box-shadow:none;
+      overflow:hidden;
     }
-    .panel-overlay.active .panel-shell{transform:scale(1);opacity:1}
 
     .panel-frame{
-      display:block;width:100%;height:100%;border:0;background:transparent
+      display:block;
+      width:100%;
+      height:100%;
+      border:0;
+      background:transparent;
     }
 
     .panel-close{
-      position:absolute;z-index:8;top:16px;right:16px;width:48px;height:48px;
-      border:1px solid rgba(220,240,250,.28);border-radius:50%;
-      background:rgba(5,10,14,.42);color:#eef5f8;font-size:28px;font-weight:300;line-height:1;
-      cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      position:fixed;
+      z-index:10;
+      top:4.2vh;
+      right:4.4vw;
+      width:46px;
+      height:46px;
+      border:1px solid rgba(210,235,248,.34);
+      border-radius:50%;
+      background:rgba(3,10,15,.48);
+      color:#eef7fb;
+      font-size:27px;
+      font-weight:300;
+      line-height:1;
+      cursor:pointer;
+      backdrop-filter:blur(9px);
+      -webkit-backdrop-filter:blur(9px);
+      box-shadow:0 0 14px rgba(110,205,255,.09);
       transition:background .15s ease,border-color .15s ease,transform .15s ease
     }
     .panel-close:hover,.panel-close:focus-visible{
-      background:rgba(28,56,72,.82);border-color:rgba(185,230,250,.66);transform:scale(1.05);outline:none
+      background:rgba(25,60,82,.84);
+      border-color:rgba(175,230,255,.78);
+      transform:scale(1.05);
+      outline:none
     }
 
-    @media (max-width:700px){
+    @media(max-width:700px){
       .interaction-guide{top:10px;right:10px;padding:7px 9px;font-size:10px}
       .hotspot::after{bottom:5px;padding:5px 7px;font-size:9px;white-space:normal}
-      .panel-shell{width:97vw;height:92vh}
-      .panel-close{top:10px;right:10px;width:42px;height:42px}
+      .panel-close{top:18px;right:18px;width:42px;height:42px}
     }
-
-    @media (prefers-reduced-motion:reduce){
+    @media(prefers-reduced-motion:reduce){
       *,*::before,*::after{animation:none!important;transition:none!important}
     }
   </style>
@@ -171,21 +205,39 @@
 
   <main class="main-stage" id="mainStage" aria-label="Project ARGO NOTE 메인 거점">
     <div class="scene">
-      <img class="main-bg" src="images/site-main.jpg" alt="반지하 지하철 역사를 개조한 서울 생활권 확장 사업 거점" draggable="false">
+      <img class="main-bg" src="images/site-main.jpg"
+           alt="반지하 지하철 역사를 개조한 서울 생활권 확장 사업 거점"
+           draggable="false">
 
-      <a class="hotspot hotspot-lounge" href="lounge.html" data-panel="lounge" data-label="휴게실: 뉴스 및 단편 열람" aria-label="휴게실: 뉴스 및 단편 열람"></a>
-      <a class="hotspot hotspot-storage" href="cards.html" data-panel="cards" data-label="장비 창고: 카드 열람" aria-label="장비 창고: 카드 열람"></a>
-      <a class="hotspot hotspot-office" href="archive.html" data-panel="archive" data-label="사무실: 출입 명부 및 기록 확인" aria-label="사무실: 출입 명부 및 기록 확인"></a>
-      <a class="hotspot hotspot-elevator" href="#" data-route="gameplay" data-label="체험판 테스트 플레이" aria-label="체험판 테스트 플레이"></a>
+      <a class="hotspot hotspot-lounge"
+         href="lounge.html" data-panel="lounge"
+         data-label="휴게실: 뉴스 및 단편 열람"
+         aria-label="휴게실: 뉴스 및 단편 열람"></a>
+
+      <a class="hotspot hotspot-storage"
+         href="cards.html" data-panel="cards"
+         data-label="장비 창고: 카드 열람"
+         aria-label="장비 창고: 카드 열람"></a>
+
+      <a class="hotspot hotspot-office"
+         href="archive.html" data-panel="archive"
+         data-label="사무실: 출입 명부 및 기록 확인"
+         aria-label="사무실: 출입 명부 및 기록 확인"></a>
+
+      <a class="hotspot hotspot-elevator"
+         href="#" data-route="gameplay"
+         data-label="체험판 테스트 플레이"
+         aria-label="체험판 테스트 플레이"></a>
     </div>
   </main>
 
-  <button class="interaction-guide" id="interactionGuide" type="button" aria-pressed="false" aria-controls="mainStage">
+  <button class="interaction-guide" id="interactionGuide" type="button"
+          aria-pressed="false" aria-controls="mainStage">
     <span class="interaction-dot" aria-hidden="true"></span>
     INTERACTION
   </button>
 
-  <div class="main-hint" id="mainHint" aria-hidden="true">점멸하는 구역을 선택해 이동할 수 있습니다.</div>
+  <div class="main-hint" id="mainHint">점멸하는 구역을 선택해 이동할 수 있습니다.</div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <section class="panel-overlay" id="panelOverlay" aria-hidden="true">
@@ -193,9 +245,12 @@
     <div class="panel-dimmer"></div>
 
     <div class="panel-shell" id="panelShell">
-      <button class="panel-close" id="panelClose" type="button" aria-label="패널 닫기">×</button>
-      <iframe class="panel-frame" id="panelFrame" title="Project ARGO NOTE 콘텐츠 패널" src="about:blank"></iframe>
+      <iframe class="panel-frame" id="panelFrame"
+              title="Project ARGO NOTE 콘텐츠 패널"
+              src="about:blank"></iframe>
     </div>
+
+    <button class="panel-close" id="panelClose" type="button" aria-label="패널 닫기">×</button>
   </section>
 
   <script>
@@ -220,7 +275,9 @@
     const mainHint = document.getElementById("mainHint");
     const toast = document.getElementById("toast");
     const entryCurtain = document.getElementById("entryCurtain");
+
     const panelOverlay = document.getElementById("panelOverlay");
+    const panelShell = document.getElementById("panelShell");
     const panelFrame = document.getElementById("panelFrame");
     const panelClose = document.getElementById("panelClose");
     const panelRandomBg = document.getElementById("panelRandomBg");
@@ -243,42 +300,39 @@
     document.querySelectorAll("[data-panel]").forEach((hotspot) => {
       hotspot.addEventListener("click", (event) => {
         event.preventDefault();
-        const panelName = hotspot.dataset.panel;
-        const page = PANEL_PAGES[panelName];
+        const page = PANEL_PAGES[hotspot.dataset.panel];
         if (page) openPanel(page);
       });
     });
 
-    function openPanel(page) {
+    function openPanel(page){
       setRandomPanelBackground();
       panelFrame.src = page;
       panelOverlay.classList.add("active");
-      panelOverlay.setAttribute("aria-hidden", "false");
+      panelOverlay.setAttribute("aria-hidden","false");
       mainHint.classList.remove("show");
       guideButton.style.visibility = "hidden";
     }
 
-    function closePanel() {
+    function closePanel(){
       panelOverlay.classList.remove("active");
-      panelOverlay.setAttribute("aria-hidden", "true");
+      panelOverlay.setAttribute("aria-hidden","true");
       guideButton.style.visibility = "";
-
       setTimeout(() => {
         if (!panelOverlay.classList.contains("active")) {
           panelFrame.src = "about:blank";
         }
-      }, 240);
+      },240);
     }
 
-    function setRandomPanelBackground() {
-      if (PANEL_BACKGROUNDS.length === 0) return;
+    function setRandomPanelBackground(){
+      if (!PANEL_BACKGROUNDS.length) return;
       let index;
-      if (PANEL_BACKGROUNDS.length === 1) {
-        index = 0;
-      } else {
+      if (PANEL_BACKGROUNDS.length === 1) index = 0;
+      else {
         do {
           index = Math.floor(Math.random() * PANEL_BACKGROUNDS.length);
-        } while (index === lastBackgroundIndex);
+        } while(index === lastBackgroundIndex);
       }
       lastBackgroundIndex = index;
       panelRandomBg.style.backgroundImage = `url("${PANEL_BACKGROUNDS[index]}")`;
@@ -286,10 +340,10 @@
 
     panelClose.addEventListener("click", closePanel);
 
-    panelOverlay.addEventListener("click", (event) => {
-      if (event.target === panelOverlay || event.target === panelRandomBg) {
-        closePanel();
-      }
+    /* iframe 자체가 전체 화면을 덮기 때문에,
+       바깥 클릭 닫기는 내부 페이지의 투명 바깥 영역에서 parent.postMessage로 처리 */
+    window.addEventListener("message", (event) => {
+      if (event.data === "ARGO_CLOSE_PANEL") closePanel();
     });
 
     document.addEventListener("keydown", (event) => {
@@ -303,12 +357,12 @@
       showToast("체험판 테스트 플레이 페이지는 현재 준비 중입니다.");
     });
 
-    function showToast(message) {
+    function showToast(message){
       clearTimeout(toastTimer);
       mainHint.classList.remove("show");
       toast.textContent = message;
       toast.classList.add("show");
-      toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+      toastTimer = setTimeout(() => toast.classList.remove("show"),1800);
     }
   </script>
 </body>

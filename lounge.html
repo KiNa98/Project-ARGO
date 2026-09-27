@@ -1,80 +1,27 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Lounge</title>
 <style>
-*{box-sizing:border-box}
-html,body{
-  margin:0;width:100%;height:100%;background:transparent;color:#1f1f1f;
-  font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif
-}
-body{padding:0}
-.page{
-  width:100%;height:100%;
-  padding:20px;
-  background:linear-gradient(rgba(10,14,18,.14), rgba(10,14,18,.14));
-}
-.paper{
-  width:100%;height:100%;
-  padding:34px 38px;
-  background:rgba(244,242,236,.92);
-  border:1px solid rgba(210,205,194,.92);
-  box-shadow:0 18px 60px rgba(0,0,0,.24)
-}
-.code{
-  margin:0 0 10px;color:#777670;font-size:11px;letter-spacing:.18em
-}
-h1{
-  margin:0 0 6px;
-  font-size:clamp(22px,2.8vw,38px);
-  font-weight:700
-}
-.sub{
-  margin:0 0 28px;
-  padding-bottom:16px;
-  border-bottom:1px solid #afaea8;
-  color:#575651;
-  font-size:13px
-}
-.columns{
-  display:grid;grid-template-columns:1fr 1fr;gap:28px
-}
-.article{
-  padding:18px 0;border-bottom:1px solid #cbc8bf
-}
-.article h2{
-  margin:0 0 8px;font-size:19px
-}
-.article p{
-  margin:0;line-height:1.8;color:#444;font-size:13px
-}
-@media(max-width:760px){
-  .page{padding:14px}
-  .paper{padding:24px 20px}
-  .columns{grid-template-columns:1fr}
-}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:transparent;font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif}
+body{display:grid;place-items:center;padding:5vh 6vw;color:#222}
+.paper{width:min(82vw,1380px);height:min(82vh,830px);padding:42px 48px;background:rgba(246,244,238,.95);border:1px solid rgba(210,206,195,.95);box-shadow:0 24px 80px rgba(0,0,0,.42);overflow:auto}
+.code{font-size:10px;letter-spacing:.20em;color:#777;margin:0 0 10px}
+h1{font-size:clamp(22px,2.7vw,38px);margin:0 0 8px}
+.sub{font-size:13px;color:#555;border-bottom:1px solid #aaa;padding-bottom:16px;margin-bottom:26px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}.item{padding:18px 0;border-bottom:1px solid #ccc}.item h2{font-size:18px}.item p{font-size:13px;line-height:1.8;color:#444}
+@media(max-width:800px){.paper{width:94vw;height:auto;min-height:90vh}.grid{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
-<div class="page">
-<main class="paper">
-  <p class="code">LOUNGE READING MATERIAL</p>
-  <h1>NEWS &amp; STORY</h1>
-  <p class="sub">뉴스 및 단편 열람 — 종이 문서형 기본 양식</p>
-
-  <div class="columns">
-    <section class="article">
-      <h2>NEWS</h2>
-      <p>기사, 현장 소식, 생활권 변화, 복구 사업 관련 뉴스를 배치할 영역입니다.</p>
-    </section>
-    <section class="article">
-      <h2>SHORT STORY</h2>
-      <p>세계 안에서 읽는 단편, 취재물, 짧은 여행 기록 등을 배치할 영역입니다.</p>
-    </section>
-  </div>
+<body id="body">
+<main class="paper" id="panel">
+<p class="code">LOUNGE READING MATERIAL</p><h1>NEWS &amp; STORY</h1><p class="sub">뉴스 및 단편 열람</p>
+<div class="grid"><section class="item"><h2>NEWS</h2><p>기사와 현장 소식을 배치할 영역입니다.</p></section><section class="item"><h2>SHORT STORY</h2><p>단편과 취재물을 배치할 영역입니다.</p></section></div>
 </main>
-</div>
-</body>
-</html>
+<script>
+const b=document.getElementById("body"),p=document.getElementById("panel");
+b.addEventListener("click",e=>{if(!p.contains(e.target)) parent.postMessage("ARGO_CLOSE_PANEL","*");});
+p.addEventListener("click",e=>e.stopPropagation());
+</script>
+</body></html>
