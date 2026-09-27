@@ -144,24 +144,41 @@
       rgba(0,0,0,.42) 100%
     );
 
-    /* 더 이상 보이는 검은 직사각형 패널을 만들지 않는다. */
-    .panel-shell{
-      position:absolute;
-      inset:0;
-      z-index:3;
-      background:transparent;
-      border:0;
-      box-shadow:none;
-      overflow:hidden;
-    }
+    /* 더 이상 보이는 검은 직사각형 패널을 만들지 않는다.
+    */.panel-shell{
+  position:absolute;
+  inset:0;
+  z-index:3;
 
-    .panel-frame{
-      display:block;
-      width:100%;
-      height:100%;
-      border:0;
-      background:transparent;
-    }
+  width:100vw;
+  height:100vh;
+
+  margin:0;
+  padding:0;
+
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  overflow:hidden;
+}
+
+.panel-frame{
+  position:absolute;
+  inset:0;
+
+  display:block;
+
+  width:100vw;
+  height:100vh;
+  min-width:100vw;
+  min-height:100vh;
+
+  margin:0;
+  padding:0;
+
+  border:0;
+  background:transparent;
+}
 
     .panel-close{
       position:fixed;
