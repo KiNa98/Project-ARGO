@@ -129,20 +129,20 @@
     .panel-random-bg{
       position:absolute;inset:0;z-index:0;
       background-position:center;background-size:cover;background-repeat:no-repeat;
-      opacity:.50;transform:scale(1.012);
+      opacity:.75;transform:scale(1.012);
       transition:opacity .24s ease,transform .5s ease
     }
     .panel-overlay.active .panel-random-bg{transform:scale(1)}
 
     .panel-dimmer{
       position:absolute;inset:0;z-index:1;
-      background:
-        radial-gradient(circle at center,
-          rgba(0,0,0,.32) 0%,
-          rgba(0,0,0,.48) 58%,
-          rgba(0,0,0,.62) 100%);
-      pointer-events:none
-    }
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0,0,0,.16) 0%,
+      rgba(0,0,0,.28) 58%,
+      rgba(0,0,0,.42) 100%
+    );
 
     /* 더 이상 보이는 검은 직사각형 패널을 만들지 않는다. */
     .panel-shell{
