@@ -692,174 +692,47 @@ body{
 </main>
 
 <script>
-/* =========================================================
-   WORLD DATA
-   짧은 1~2문장 요약을 넣는 영역
-   ========================================================= */
-const WORLD_DATA = {
-  background: [
-    {
-      title:"시대와 지구",
-      text:"대재해와 외계 전쟁을 거친 뒤에도 지구에는 여러 도시와 생활권이 남아 있다. 복구와 우주 이주가 동시에 진행되는 시대다."
-    },
-    {
-      title:"서울 생활권",
-      text:"서울의 안정적인 생활권은 과거보다 축소되어 있으며, 지하 시설 복구와 지상 안전 구역 확장이 장기간 이어지고 있다."
-    },
-    {
-      title:"거대 생태",
-      text:"동물의 거대화는 전 지구적 현상으로 자리 잡았다. 인간은 퇴치보다 이동 경로와 서식지 조정을 통해 공존 범위를 넓히고 있다."
-    }
-  ],
-  concept: [
-    {
-      title:"중력권",
-      text:"워프와 우주 이동 기술에서 중요한 기준이 되는 물리적 영역. 같은 중력권 안과 서로 다른 중력권 사이의 이동 방식이 구분된다."
-    },
-    {
-      title:"워프",
-      text:"외계 기술을 기반으로 발전한 공간 이동 기술. 일반적인 장거리 이동은 대형 장치와 정밀한 좌표 계산을 필요로 한다."
-    },
-    {
-      title:"복구 사업",
-      text:"지하 시설과 노후 기반 구조를 장기간에 걸쳐 보강해 안전한 생활권을 넓히는 도시 프로젝트다."
-    }
-  ],
-  group: [
-    {
-      title:"서울시 복구 사업",
-      text:"서울시와 여러 기업이 공동으로 진행하는 장기 복구 사업. 지하철과 지하 기반 시설의 회복이 주요 축이다."
-    },
-    {
-      title:"이스 출판사",
-      text:"우주에 본사를 둔 출판사. 지구와 우주 각지의 여행, 사회, 생태 관련 취재와 기록을 수행한다."
-    },
-    {
-      title:"PANTREE",
-      text:"임업을 기반으로 성장한 대기업. 우주 시대에도 살아 있는 나무와 산림 자원의 가치가 높아지며 영향력을 유지하고 있다."
-    }
-  ]
-};
 
-/* =========================================================
-   SETTING DATA
-   image에 실제 파일 경로를 넣으면 자동 표시.
-   ========================================================= */
-const SETTING_DATA = [
-  {
-    label:"개념: 워프 장치",
-    type:"CONCEPT",
-    title:"워프 장치",
-    image:"",
-    short:"중력권과 공간 좌표를 이용해 장거리 이동을 가능하게 하는 대형 이동 장치.",
-    body:[
-      "일반 사용자가 직접 공간 좌표를 계산하고 워프를 실행하기는 어렵기 때문에 대형 설비와 제어 시스템이 필요하다.",
-      "서로 다른 중력권 사이의 이동에는 별도의 절차와 장치가 사용된다."
-    ]
-  },
-  {
-    label:"사건: 외계 전쟁",
-    type:"INCIDENT",
-    title:"외계 전쟁",
-    image:"",
-    short:"인류가 외계 문명과 직접 충돌하면서 지구 환경과 기술 체계가 크게 변화한 사건.",
-    body:[
-      "전쟁 이후 인류는 외계 기술 일부를 확보했지만 지구 곳곳에는 거대한 환경 변화와 파괴 흔적이 남았다.",
-      "현재의 우주 이동 기술과 여러 복구 사업 역시 이 사건의 후속 결과와 연결된다."
-    ]
-  },
-  {
-    label:"시설: 서울 복구 거점",
-    type:"FACILITY",
-    title:"서울 복구 거점",
-    image:"",
-    short:"지하철 역사 내부를 개조해 만들어진 현장 작업자와 기술진의 생활·관리 거점.",
-    body:[
-      "반지하 개찰구층을 넓게 정리해 사무실, 장비 창고, 휴게실, 작업 통로를 배치했다.",
-      "복구 진행 상황에 따라 역사 내부의 사용 가능 구역도 점차 늘어난다."
-    ]
-  }
-];
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-/* =========================================================
-   PERSONNEL DATA
-   대표 이미지만 우선 넣을 수 있도록 구성.
-   gallery는 상세 페이지 이미지 뷰어용.
-   ========================================================= */
-const PERSONNEL_DATA = [
-  {
-    name:"ARGO",
-    cover:"",
-    gallery:[],
-    age:"21세",
-    gender:"-",
-    quote:"대표 대사",
-    species:"인간",
-    origin:"지구",
-    job:"프리랜서 사진기자",
-    affiliation:"이스 출판사 협력",
-    appearance:"간략한 외형적 특징",
-    outfits:["기본 복장","현장 활동복"],
-    specialty:"사진 촬영과 현장 기록",
-    summary:"세계를 넓게 이동하며 변화하는 지구를 기록하는 사진기자. 여행과 취재를 통해 다양한 장소와 사람의 기록을 남긴다."
-  },
-  {
-    name:"PLOX",
-    cover:"",
-    gallery:[],
-    age:"60세 이상",
-    gender:"여성",
-    quote:"대표 대사",
-    species:"인간",
-    origin:"지구",
-    job:"여행팀 팀장·편집장",
-    affiliation:"이스 출판사",
-    appearance:"은백색 장발과 푸른 눈",
-    outfits:["기본 정장","현장 활동복"],
-    specialty:"언어, 취재, 정보 수집",
-    summary:"이스 출판사의 여행팀을 이끄는 편집장이자 회장 직속 보좌관. 장난스러운 태도와 뛰어난 실무 능력을 함께 지닌 인물이다."
-  },
-  {
-    name:"MEARI",
-    cover:"",
-    gallery:[],
-    age:"20세",
-    gender:"여성",
-    quote:"대표 대사",
-    species:"인간",
-    origin:"지구",
-    job:"여행자",
-    affiliation:"개인",
-    appearance:"긴 밝은 머리와 청록색 눈",
-    outfits:["여행복","야외 복장","경량 복장"],
-    specialty:"여행 계획과 기록",
-    summary:"다양한 풍경과 사람을 만나며 세상을 넓혀가는 젊은 여행자. 계획을 세워 느리게 여행하고 경험을 기록으로 남긴다."
-  },
-  {
-    name:"IRA",
-    cover:"",
-    gallery:[],
-    age:"-",
-    gender:"여성",
-    quote:"대표 대사",
-    species:"인간",
-    origin:"지구",
-    job:"기술자",
-    affiliation:"외부 기술 인력",
-    appearance:"간략한 외형적 특징",
-    outfits:["작업복","외출복"],
-    specialty:"기계·설비 기술",
-    summary:"현장 작업을 선호하는 조용한 기술자. 서울 복구 사업에서는 외부 기술 지원을 위해 단기 출장 형태로 등장한다."
-  }
-];
+function paragraphs(text){
+  const raw = String(text ?? "").trim();
+  if(!raw) return "";
+  return raw
+    .split(/\n\s*\n/)
+    .map(p => `<p>${escapeHtml(p).replaceAll("\n","<br>")}</p>`)
+    .join("");
+}
+
+async function loadJson(path){
+  const response = await fetch(path, {cache:"no-store"});
+  if(!response.ok) throw new Error(`${path}: ${response.status}`);
+  return response.json();
+}
+
 
 const archiveBody = document.getElementById("archiveBody");
 const archiveWindow = document.getElementById("archiveWindow");
 const archiveContent = document.getElementById("archiveContent");
 const tabs = [...document.querySelectorAll(".archive-tab")];
 
+let WORLD_DATA = {background:[], concept:[], group:[]};
+let SETTING_DATA = [];
+let PERSONNEL_DATA = [];
+
+function visibleItems(items){
+  return (Array.isArray(items) ? items : []).filter(item => item.visible !== false);
+}
+
 /* =========================================================
-   WORLD RENDER
+   WORLD
    ========================================================= */
 function renderWorld(){
   archiveContent.innerHTML = `
@@ -869,7 +742,6 @@ function renderWorld(){
         <button class="world-subtab" data-world="concept" type="button">개념</button>
         <button class="world-subtab" data-world="group" type="button">집단</button>
       </nav>
-
       <div class="world-doc" id="worldDoc"></div>
     </section>
   `;
@@ -877,12 +749,15 @@ function renderWorld(){
   const worldDoc = document.getElementById("worldDoc");
 
   function showWorld(key){
-    worldDoc.innerHTML = WORLD_DATA[key].map(item=>`
-      <article class="world-entry">
-        <h2 class="world-entry-title">${item.title}</h2>
-        <p>${item.text}</p>
-      </article>
-    `).join("");
+    const list = Array.isArray(WORLD_DATA[key]) ? WORLD_DATA[key] : [];
+    worldDoc.innerHTML = list.length
+      ? list.map(item=>`
+          <article class="world-entry">
+            <h2 class="world-entry-title">${escapeHtml(item.title)}</h2>
+            <p>${escapeHtml(item.text)}</p>
+          </article>
+        `).join("")
+      : `<article class="world-entry"><p>등록된 항목이 없습니다.</p></article>`;
 
     archiveContent.querySelectorAll(".world-subtab").forEach(button=>{
       button.classList.toggle("active",button.dataset.world===key);
@@ -897,63 +772,63 @@ function renderWorld(){
 }
 
 /* =========================================================
-   SETTING RENDER
+   SETTINGS
    ========================================================= */
 function renderSetting(){
+  const items = visibleItems(SETTING_DATA);
+
   archiveContent.innerHTML = `
     <section class="setting-view">
-
       <aside class="setting-index">
         <p class="setting-index-label">ARCHIVE INDEX</p>
-
-        ${SETTING_DATA.map((item,index)=>`
-          <button
-            class="setting-button ${index===0 ? "active" : ""}"
-            type="button"
-            data-index="${index}"
-          >
-            ${item.label}
-          </button>
-        `).join("")}
+        ${
+          items.length
+            ? items.map((item,index)=>`
+                <button
+                  class="setting-button ${index===0 ? "active" : ""}"
+                  type="button"
+                  data-index="${index}"
+                >${escapeHtml(item.label || item.title)}</button>
+              `).join("")
+            : `<div class="setting-button">등록된 설정이 없습니다.</div>`
+        }
       </aside>
 
       <article class="setting-detail" id="settingDetail"></article>
-
     </section>
   `;
 
   const detail = document.getElementById("settingDetail");
 
   function showSetting(index){
-    const item = SETTING_DATA[index];
+    const item = items[index];
+    if(!item){
+      detail.innerHTML = `<p class="setting-short">등록된 설정이 없습니다.</p>`;
+      return;
+    }
 
     detail.innerHTML = `
-      <p class="setting-kicker">${item.type}</p>
+      <p class="setting-kicker">${escapeHtml(item.type || "SETTING")}</p>
 
       <div class="setting-image">
         ${
           item.image
-            ? `<img src="${item.image}" alt="${item.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">`
+            ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"
+                    onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">`
             : ``
         }
-        <div
-          class="setting-image-placeholder"
-          style="${item.image ? "display:none;" : ""}"
-        >
+        <div class="setting-image-placeholder" style="${item.image ? "display:none;" : ""}">
           SETTING IMAGE
         </div>
       </div>
 
-      <h1>${item.title}</h1>
-      <p class="setting-short">${item.short}</p>
-
-      <div class="setting-body">
-        ${item.body.map(p=>`<p>${p}</p>`).join("")}
-      </div>
+      <h1>${escapeHtml(item.title)}</h1>
+      <p class="setting-short">${escapeHtml(item.short)}</p>
+      <div class="setting-body">${paragraphs(item.body)}</div>
     `;
   }
 
-  archiveContent.querySelectorAll(".setting-button").forEach(button=>{
+  archiveContent.querySelectorAll(".setting-button[data-index]").forEach(button=>{
     button.addEventListener("click",()=>{
       archiveContent.querySelectorAll(".setting-button").forEach(b=>b.classList.remove("active"));
       button.classList.add("active");
@@ -968,53 +843,47 @@ function renderSetting(){
    PERSONNEL ROSTER
    ========================================================= */
 function renderPersonnelRoster(){
+  const items = visibleItems(PERSONNEL_DATA);
+
   archiveContent.innerHTML = `
     <section class="personnel-roster">
       <p class="roster-note">REGISTERED PERSONNEL / 명부에 등록된 인원</p>
 
       <div class="roster-grid">
-
-        ${PERSONNEL_DATA.map((person,index)=>`
-          <button class="roster-card" type="button" data-index="${index}">
-
-            <div class="roster-image">
-              ${
-                person.cover
-                  ? `<img src="${person.cover}" alt="${person.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`
-                  : ``
-              }
-
-              <span
-                class="roster-placeholder"
-                style="${person.cover ? "display:none;" : ""}"
-              >
-                REPRESENTATIVE IMAGE
-              </span>
-            </div>
-
-            <div class="roster-name">${person.name}</div>
-
-          </button>
-        `).join("")}
-
+        ${
+          items.length
+            ? items.map((person,index)=>`
+                <button class="roster-card" type="button" data-index="${index}">
+                  <div class="roster-image">
+                    ${
+                      person.cover
+                        ? `<img src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.name)}"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`
+                        : ``
+                    }
+                    <span class="roster-placeholder" style="${person.cover ? "display:none;" : ""}">
+                      REPRESENTATIVE IMAGE
+                    </span>
+                  </div>
+                  <div class="roster-name">${escapeHtml(person.name)}</div>
+                </button>
+              `).join("")
+            : `<div class="roster-note">등록된 인물이 없습니다.</div>`
+        }
       </div>
     </section>
   `;
 
   archiveContent.querySelectorAll(".roster-card").forEach(card=>{
-    card.addEventListener("click",()=>{
-      renderPersonnelDetail(Number(card.dataset.index));
-    });
+    card.addEventListener("click",()=>renderPersonnelDetail(items, Number(card.dataset.index)));
   });
 }
 
-/* =========================================================
-   PERSONNEL DETAIL
-   ========================================================= */
-function renderPersonnelDetail(index){
-  const person = PERSONNEL_DATA[index];
+function renderPersonnelDetail(items,index){
+  const person = items[index];
+  if(!person) return renderPersonnelRoster();
 
-  const gallery = person.gallery.length
+  const gallery = Array.isArray(person.gallery) && person.gallery.length
     ? person.gallery
     : [null,null,null,null,null];
 
@@ -1025,13 +894,13 @@ function renderPersonnelDetail(index){
         <div class="viewer-main" id="viewerMain">
           ${
             gallery[0]
-              ? `<img src="${gallery[0]}" alt="${person.name}">`
+              ? `<img src="${escapeHtml(gallery[0])}" alt="${escapeHtml(person.name)}">`
               : `<span class="detail-placeholder">CHARACTER IMAGE</span>`
           }
         </div>
 
         <div class="thumb-row">
-          ${gallery.slice(0,5).map((img,i)=>`
+          ${Array.from({length:5},(_,i)=>`
             <button class="thumb ${i===0 ? "active" : ""}" type="button" data-index="${i}">
               ${i===4 ? "SHEET" : String(i+1).padStart(2,"0")}
             </button>
@@ -1040,61 +909,38 @@ function renderPersonnelDetail(index){
       </section>
 
       <section class="profile">
-
-        <button class="back-roster" id="backRoster" type="button">
-          ← PERSONNEL LIST
-        </button>
+        <button class="back-roster" id="backRoster" type="button">← PERSONNEL LIST</button>
 
         <div class="profile-name">
-          <h1>${person.name}</h1>
-          <span class="meta">(${person.age} / ${person.gender})</span>
+          <h1>${escapeHtml(person.name)}</h1>
+          <span class="meta">(${escapeHtml(person.age)} / ${escapeHtml(person.gender)})</span>
         </div>
 
-        <p class="quote">“${person.quote}”</p>
+        <p class="quote">“${escapeHtml(person.quote)}”</p>
 
         <div class="info-grid">
-          <div class="info-pair">
-            <span class="label">분류</span>
-            <span class="value">${person.species}</span>
-          </div>
-
-          <div class="info-pair">
-            <span class="label">출신</span>
-            <span class="value">${person.origin}</span>
-          </div>
-
-          <div class="info-pair">
-            <span class="label">직업</span>
-            <span class="value">${person.job}</span>
-          </div>
-
-          <div class="info-pair">
-            <span class="label">소속</span>
-            <span class="value">${person.affiliation}</span>
-          </div>
+          <div class="info-pair"><span class="label">분류</span><span class="value">${escapeHtml(person.species)}</span></div>
+          <div class="info-pair"><span class="label">출신</span><span class="value">${escapeHtml(person.origin)}</span></div>
+          <div class="info-pair"><span class="label">직업</span><span class="value">${escapeHtml(person.job)}</span></div>
+          <div class="info-pair"><span class="label">소속</span><span class="value">${escapeHtml(person.affiliation)}</span></div>
         </div>
 
-        <div class="info-wide">
-          <span class="label">외모</span>
-          <span class="value">${person.appearance}</span>
-        </div>
+        <div class="info-wide"><span class="label">외모</span><span class="value">${escapeHtml(person.appearance)}</span></div>
 
         <div class="info-wide">
           <span class="label">복장</span>
-          <span class="value">${person.outfits.map((x,i)=>`${String.fromCharCode(65+i)}. ${x}`).join("<br>")}</span>
+          <span class="value">${
+            (Array.isArray(person.outfits) ? person.outfits : [])
+              .map((x,i)=>`${String.fromCharCode(65+i)}. ${escapeHtml(x)}`)
+              .join("<br>")
+          }</span>
         </div>
 
-        <div class="info-wide">
-          <span class="label">특기</span>
-          <span class="value">${person.specialty}</span>
-        </div>
+        <div class="info-wide"><span class="label">특기</span><span class="value">${escapeHtml(person.specialty)}</span></div>
 
         <div class="divider"></div>
-
-        <p class="summary">${person.summary}</p>
-
+        <p class="summary">${escapeHtml(person.summary)}</p>
       </section>
-
     </section>
   `;
 
@@ -1106,12 +952,11 @@ function renderPersonnelDetail(index){
   thumbs.forEach(button=>{
     button.addEventListener("click",()=>{
       const i = Number(button.dataset.index);
-
       thumbs.forEach(b=>b.classList.remove("active"));
       button.classList.add("active");
 
       if(gallery[i]){
-        viewerMain.innerHTML = `<img src="${gallery[i]}" alt="${person.name}">`;
+        viewerMain.innerHTML = `<img src="${escapeHtml(gallery[i])}" alt="${escapeHtml(person.name)}">`;
       }else{
         viewerMain.innerHTML = `<span class="detail-placeholder">CHARACTER IMAGE</span>`;
       }
@@ -1119,14 +964,8 @@ function renderPersonnelDetail(index){
   });
 }
 
-/* =========================================================
-   MAIN ARCHIVE TAB
-   ========================================================= */
 function switchArchive(view){
-  tabs.forEach(tab=>{
-    tab.classList.toggle("active",tab.dataset.view===view);
-  });
-
+  tabs.forEach(tab=>tab.classList.toggle("active",tab.dataset.view===view));
   if(view==="world") renderWorld();
   if(view==="setting") renderSetting();
   if(view==="personnel") renderPersonnelRoster();
@@ -1136,18 +975,33 @@ tabs.forEach(tab=>{
   tab.addEventListener("click",()=>switchArchive(tab.dataset.view));
 });
 
-/* 패널 외부 클릭 → MAIN */
 archiveBody.addEventListener("click",(event)=>{
   if(!archiveWindow.contains(event.target)){
     parent.postMessage("ARGO_CLOSE_PANEL","*");
   }
 });
 
-archiveWindow.addEventListener("click",(event)=>{
-  event.stopPropagation();
-});
+archiveWindow.addEventListener("click",(event)=>event.stopPropagation());
 
-switchArchive("world");
+async function bootArchive(){
+  try{
+    const [world,settings,personnel] = await Promise.all([
+      loadJson("content/archive/world.json"),
+      loadJson("content/archive/settings.json"),
+      loadJson("content/archive/personnel.json")
+    ]);
+
+    WORLD_DATA = world || WORLD_DATA;
+    SETTING_DATA = settings?.items || [];
+    PERSONNEL_DATA = personnel?.items || [];
+  }catch(error){
+    console.error("ARCHIVE content load failed:",error);
+  }
+
+  switchArchive("world");
+}
+
+bootArchive();
 </script>
 
 </body>

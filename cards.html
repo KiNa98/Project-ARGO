@@ -274,6 +274,118 @@ h1{
   text-align:right;
 }
 
+
+/* ===== CMS 카드 상세 ===== */
+.item-card{
+  cursor:pointer;
+}
+
+.empty-message{
+  padding:26px 4px;
+  color:rgba(220,238,229,.58);
+  font-size:12px;
+}
+
+.card-detail{
+  display:none;
+  height:100%;
+}
+
+.card-detail.active{
+  display:block;
+}
+
+.card-detail-back{
+  margin:0 0 14px;
+  padding:6px 0;
+  border:0;
+  background:transparent;
+  color:#cce3d7;
+  font:inherit;
+  font-size:10px;
+  letter-spacing:.10em;
+  cursor:pointer;
+}
+
+.card-detail-back:hover{
+  color:#fff;
+}
+
+.card-label-sheet{
+  display:grid;
+  grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);
+  gap:28px;
+
+  min-height:420px;
+  padding:24px;
+
+  border:1px solid rgba(217,224,210,.76);
+  border-radius:4px;
+
+  background:rgba(244,242,232,.96);
+  color:#292d2a;
+
+  box-shadow:0 18px 48px rgba(0,0,0,.24);
+}
+
+.card-label-image{
+  min-height:300px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border:1px solid rgba(70,80,72,.13);
+  background:rgba(220,223,213,.55);
+}
+
+.card-label-image img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.card-label-placeholder{
+  color:rgba(55,63,58,.38);
+  font-size:10px;
+  letter-spacing:.10em;
+}
+
+.card-label-meta{
+  color:#6f786f;
+  font-size:9px;
+  letter-spacing:.16em;
+}
+
+.card-label-title{
+  margin:8px 0 12px;
+  font-size:25px;
+  line-height:1.35;
+}
+
+.card-label-short{
+  margin:0 0 18px;
+  color:#4f5752;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.card-label-body{
+  padding-top:16px;
+  border-top:1px solid rgba(70,80,72,.18);
+  color:#424a45;
+  font-size:12px;
+  line-height:1.8;
+}
+
+.card-label-body p{
+  margin:0 0 9px;
+}
+
+@media(max-width:800px){
+  .card-label-sheet{
+    grid-template-columns:1fr;
+  }
+}
+
 @media(max-width:1050px){
   .card-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -421,28 +533,156 @@ h1{
   </main>
 
 <script>
-  const body = document.getElementById("cardsBody");
-  const panel = document.getElementById("cardsWindow");
 
-  const infoButton = document.getElementById("infoButton");
-  const infoPanel = document.getElementById("infoPanel");
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-  /* INFO 설명 열기 / 닫기 */
-  infoButton.addEventListener("click", () => {
-    const open = infoPanel.classList.toggle("open");
-    infoButton.setAttribute("aria-expanded", String(open));
+function paragraphs(text){
+  const raw = String(text ?? "").trim();
+  if(!raw) return "";
+  return raw
+    .split(/\n\s*\n/)
+    .map(p => `<p>${escapeHtml(p).replaceAll("\n","<br>")}</p>`)
+    .join("");
+}
+
+async function loadJson(path){
+  const response = await fetch(path, {cache:"no-store"});
+  if(!response.ok) throw new Error(`${path}: ${response.status}`);
+  return response.json();
+}
+
+
+const body = document.getElementById("cardsBody");
+const panel = document.getElementById("cardsWindow");
+const infoButton = document.getElementById("infoButton");
+const infoPanel = document.getElementById("infoPanel");
+const cardContent = document.querySelector(".card-content");
+const categoryBar = document.querySelector(".category-bar");
+
+let CARD_ITEMS = [];
+let activeCategory = "전체";
+
+function visibleItems(items){
+  return (Array.isArray(items) ? items : []).filter(item => item.visible !== false);
+}
+
+infoButton.addEventListener("click",()=>{
+  const open = infoPanel.classList.toggle("open");
+  infoButton.setAttribute("aria-expanded",String(open));
+});
+
+function renderCards(){
+  const all = visibleItems(CARD_ITEMS);
+  const filtered = activeCategory === "전체"
+    ? all
+    : all.filter(item => item.category === activeCategory);
+
+  cardContent.innerHTML = `
+    <div class="card-grid">
+      ${
+        filtered.length
+          ? filtered.map((item,index)=>`
+              <article class="item-card" tabindex="0" data-index="${all.indexOf(item)}">
+                <div>
+                  <span class="item-type">${escapeHtml(item.code || item.category || "")}</span>
+                  <strong>${escapeHtml(item.title)}</strong>
+                  <p>${escapeHtml(item.short)}</p>
+                </div>
+
+                <div class="item-footer">
+                  <span>${escapeHtml(item.asset_label || "")}</span>
+                  <span>VIEW</span>
+                </div>
+              </article>
+            `).join("")
+          : `<div class="empty-message">이 분류에 등록된 카드가 없습니다.</div>`
+      }
+    </div>
+    <div class="detail-note">SELECTED CARD → LABEL DETAIL VIEW</div>
+  `;
+
+  cardContent.querySelectorAll(".item-card").forEach(card=>{
+    const open = ()=>showCardDetail(Number(card.dataset.index));
+    card.addEventListener("click",open);
+    card.addEventListener("keydown",(event)=>{
+      if(event.key==="Enter" || event.key===" "){
+        event.preventDefault();
+        open();
+      }
+    });
   });
+}
 
-  /* 패널 외부 클릭 → MAIN 복귀 */
-  body.addEventListener("click", (event) => {
-    if (!panel.contains(event.target)) {
-      parent.postMessage("ARGO_CLOSE_PANEL", "*");
-    }
-  });
+function showCardDetail(index){
+  const item = visibleItems(CARD_ITEMS)[index];
+  if(!item) return;
 
-  panel.addEventListener("click", (event) => {
-    event.stopPropagation();
+  cardContent.innerHTML = `
+    <section class="card-detail active">
+      <button class="card-detail-back" id="cardBack" type="button">← CARD DATABASE</button>
+
+      <div class="card-label-sheet">
+        <div class="card-label-image">
+          ${
+            item.image
+              ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`
+              : ``
+          }
+          <span class="card-label-placeholder" style="${item.image ? "display:none;" : ""}">
+            CARD IMAGE
+          </span>
+        </div>
+
+        <div>
+          <div class="card-label-meta">${escapeHtml(item.code || item.category || "")}</div>
+          <h2 class="card-label-title">${escapeHtml(item.title)}</h2>
+          <p class="card-label-short">${escapeHtml(item.short)}</p>
+          <div class="card-label-body">${paragraphs(item.body)}</div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  document.getElementById("cardBack").addEventListener("click",renderCards);
+}
+
+categoryBar.querySelectorAll(".category").forEach(button=>{
+  button.addEventListener("click",()=>{
+    categoryBar.querySelectorAll(".category").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    activeCategory = button.textContent.trim();
+    renderCards();
   });
+});
+
+body.addEventListener("click",(event)=>{
+  if(!panel.contains(event.target)){
+    parent.postMessage("ARGO_CLOSE_PANEL","*");
+  }
+});
+
+panel.addEventListener("click",(event)=>event.stopPropagation());
+
+async function bootCards(){
+  try{
+    const data = await loadJson("content/cards/cards.json");
+    CARD_ITEMS = data?.items || [];
+  }catch(error){
+    console.error("CARD content load failed:",error);
+  }
+
+  renderCards();
+}
+
+bootCards();
 </script>
 
 </body>
