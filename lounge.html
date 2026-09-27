@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lounge</title>
+<style>
+*{box-sizing:border-box}
+html,body{
+  margin:0;width:100%;min-height:100%;background:transparent;color:#202020;
+  font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif
+}
+body{padding:36px}
+.paper{
+  width:min(1120px,100%);min-height:calc(100vh - 72px);margin:0 auto;padding:42px 48px;
+  background:#f3f1ea;border:1px solid #c9c7c0;box-shadow:0 18px 60px rgba(0,0,0,.38)
+}
+.code{margin:0 0 10px;color:#73736f;font-size:11px;letter-spacing:.18em}
+h1{margin:0 0 6px;font-size:clamp(32px,5vw,58px);font-weight:700}
+.sub{margin:0 0 34px;padding-bottom:18px;border-bottom:1px solid #a9a8a2;color:#555}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.article{padding:20px 0;border-bottom:1px solid #c7c5be}
+.article h2{margin:0 0 8px;font-size:20px}
+.article p{margin:0;line-height:1.75;color:#444}
+@media(max-width:760px){
+  body{padding:18px}.paper{min-height:calc(100vh - 36px);padding:28px 24px}.columns{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="paper">
+  <p class="code">LOUNGE READING MATERIAL</p>
+  <h1>NEWS &amp; STORY</h1>
+  <p class="sub">뉴스 및 단편 열람 — 종이 문서형 기본 양식</p>
+
+  <div class="columns">
+    <section class="article">
+      <h2>NEWS</h2>
+      <p>기사, 현장 소식, 생활권 변화, 복구 사업 관련 뉴스를 배치할 영역입니다.</p>
+    </section>
+    <section class="article">
+      <h2>SHORT STORY</h2>
+      <p>세계 안에서 읽는 단편, 취재물, 짧은 여행 기록 등을 배치할 영역입니다.</p>
+    </section>
+  </div>
+</main>
+</body>
+</html>

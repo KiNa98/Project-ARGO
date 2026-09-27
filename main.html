@@ -3,604 +3,272 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Project ARGO NOTE — MAIN</title>
-
   <style>
-    :root {
-      --text: #f3f7f8;
-      --ui-bg: rgba(8, 14, 18, 0.78);
-      --ui-border: rgba(190, 225, 235, 0.38);
-      --label-bg: rgba(7, 13, 17, 0.88);
+    :root{
+      --text:#f3f7f8;
+      --ui-bg:rgba(8,14,18,.78);
+      --ui-border:rgba(190,225,235,.38);
+      --label-bg:rgba(7,13,17,.88);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:var(--text);
+      font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif
+    }
+    body{width:100vw;height:100vh}
+
+    .entry-curtain{
+      position:fixed;inset:0;z-index:3000;background:#000;opacity:1;pointer-events:none;
+      transition:opacity .34s ease
+    }
+    .entry-curtain.hide{opacity:0}
+
+    .main-stage{
+      position:relative;width:100vw;height:100vh;overflow:hidden;background:#000;user-select:none
+    }
+    .scene{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);aspect-ratio:1672/941
+    }
+    @media (min-aspect-ratio:1672/941){.scene{width:100vw;height:auto}}
+    @media (max-aspect-ratio:1672/941){.scene{width:auto;height:100vh}}
+
+    .main-bg{
+      position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;object-fit:fill;
+      pointer-events:none;user-select:none;-webkit-user-drag:none
     }
 
-    * {
-      box-sizing: border-box;
+    .hotspot{
+      --spot-rgb:90,200,220;
+      position:absolute;z-index:10;display:block;
+      background:rgba(var(--spot-rgb),.08);
+      border:2px solid rgba(var(--spot-rgb),.20);
+      border-radius:5px;text-decoration:none;cursor:pointer;
+      animation:hotspotPulse 4.8s ease-in-out infinite;
+      transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease
     }
-
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      color: var(--text);
-      font-family:
-        "Noto Sans CJK KR",
-        "Noto Sans KR",
-        "Malgun Gothic",
-        sans-serif;
-    }
-
-    body {
-      width: 100vw;
-      height: 100vh;
-    }
-
-    /* =========================================================
-       PAGE TRANSITION
-       HOME → 검은 화면 → MAIN
-       ========================================================= */
-    .entry-curtain {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: #000;
-      opacity: 1;
-      pointer-events: none;
-      transition: opacity 0.34s ease;
-    }
-
-    .entry-curtain.hide {
-      opacity: 0;
-    }
-
-    /* =========================================================
-       MAIN STAGE
-       배경과 핫스팟을 같은 scene 안에서 cover 방식으로 확대한다.
-       그래서 화면 비율에 따라 그림이 잘려도 핫스팟 위치가 따라간다.
-       ========================================================= */
-    .main-stage {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: #000;
-      user-select: none;
-    }
-
-    .scene {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      aspect-ratio: 1672 / 941;
-    }
-
-    @media (min-aspect-ratio: 1672/941) {
-      .scene {
-        width: 100vw;
-        height: auto;
+    @keyframes hotspotPulse{
+      0%,68%,100%{
+        background:rgba(var(--spot-rgb),.06);
+        border-color:rgba(var(--spot-rgb),.16);
+        box-shadow:0 0 0 rgba(var(--spot-rgb),0)
+      }
+      82%{
+        background:rgba(var(--spot-rgb),.20);
+        border-color:rgba(var(--spot-rgb),.50);
+        box-shadow:inset 0 0 34px rgba(var(--spot-rgb),.08),0 0 18px rgba(var(--spot-rgb),.18)
       }
     }
-
-    @media (max-aspect-ratio: 1672/941) {
-      .scene {
-        width: auto;
-        height: 100vh;
-      }
+    .hotspot::after{
+      content:attr(data-label);position:absolute;left:50%;bottom:10px;transform:translate(-50%,6px);
+      max-width:calc(100% - 16px);padding:7px 10px;
+      border:1px solid rgba(var(--spot-rgb),.48);border-radius:4px;
+      background:var(--label-bg);color:var(--text);
+      font-size:clamp(10px,.88vw,14px);font-weight:700;line-height:1.35;letter-spacing:.025em;
+      text-align:center;white-space:nowrap;opacity:0;pointer-events:none;
+      transition:opacity .16s ease,transform .16s ease
+    }
+    .hotspot:hover,.hotspot:focus-visible,.main-stage.show-hotspots .hotspot{
+      animation-play-state:paused;background:rgba(var(--spot-rgb),.24);
+      border-color:rgba(var(--spot-rgb),.82);
+      box-shadow:inset 0 0 36px rgba(var(--spot-rgb),.12),0 0 20px rgba(var(--spot-rgb),.22);
+      outline:none
+    }
+    .hotspot:hover::after,.hotspot:focus-visible::after,.main-stage.show-hotspots .hotspot::after{
+      opacity:1;transform:translate(-50%,0)
     }
 
-    .main-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-drag: none;
+    .hotspot-lounge{
+      --spot-rgb:90,190,255;left:1.5%;top:2%;width:28.2%;height:36%;animation-delay:0s
+    }
+    .hotspot-storage{
+      --spot-rgb:205,158,42;left:29.6%;top:2%;width:17.5%;height:36%;animation-delay:-1.2s
+    }
+    .hotspot-office{
+      --spot-rgb:92,232,190;left:.8%;top:38%;width:46.2%;height:33.5%;animation-delay:-2.4s
+    }
+    .hotspot-elevator{
+      --spot-rgb:245,118,128;left:72%;top:26.5%;width:27.2%;height:56.5%;animation-delay:-3.6s
     }
 
-    /* =========================================================
-       HOTSPOTS
-       - 기본 상태에서도 아주 약하게 보임
-       - 각 영역이 서로 다른 색으로 천천히 점멸
-       - hover/focus 시 강하게 표시
-       - INTERACTION 버튼으로 전체 표시 가능
-       ========================================================= */
-    .hotspot {
-      --spot-rgb: 90, 200, 220;
-
-      position: absolute;
-      z-index: 10;
-
-      display: block;
-
-      background: rgba(var(--spot-rgb), 0.08);
-      border: 2px solid rgba(var(--spot-rgb), 0.20);
-      border-radius: 5px;
-
-      text-decoration: none;
-      cursor: pointer;
-
-      animation: hotspotPulse 4.8s ease-in-out infinite;
-
-      transition:
-        background-color 160ms ease,
-        border-color 160ms ease,
-        box-shadow 160ms ease,
-        filter 160ms ease;
+    .character-slot{
+      position:absolute;z-index:30;left:51%;bottom:0;transform:translateX(-50%);
+      width:18%;height:62%;display:none;align-items:flex-end;justify-content:center;
+      text-decoration:none;cursor:pointer
+    }
+    .character-slot.active{display:flex}
+    .character-slot img{
+      display:block;max-width:100%;max-height:100%;object-fit:contain;object-position:bottom center;
+      filter:drop-shadow(0 8px 14px rgba(0,0,0,.45));
+      transition:filter .16s ease,transform .16s ease
+    }
+    .character-slot:hover img,.character-slot:focus-visible img{
+      filter:brightness(1.08) drop-shadow(0 8px 17px rgba(0,0,0,.52));transform:translateY(-3px)
     }
 
-    @keyframes hotspotPulse {
-      0%,
-      68%,
-      100% {
-        background: rgba(var(--spot-rgb), 0.06);
-        border-color: rgba(var(--spot-rgb), 0.16);
-        box-shadow: 0 0 0 rgba(var(--spot-rgb), 0);
-      }
-
-      82% {
-        background: rgba(var(--spot-rgb), 0.20);
-        border-color: rgba(var(--spot-rgb), 0.50);
-        box-shadow:
-          inset 0 0 34px rgba(var(--spot-rgb), 0.08),
-          0 0 18px rgba(var(--spot-rgb), 0.18);
-      }
+    .interaction-guide{
+      position:fixed;z-index:100;top:16px;right:16px;display:inline-flex;align-items:center;gap:8px;
+      min-height:38px;padding:8px 12px;border:1px solid var(--ui-border);border-radius:4px;
+      background:var(--ui-bg);color:var(--text);font:inherit;font-size:12px;font-weight:700;
+      letter-spacing:.08em;cursor:pointer;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)
+    }
+    .interaction-guide:hover,.interaction-guide:focus-visible,.interaction-guide.active{
+      background:rgba(20,50,60,.92);border-color:rgba(155,235,255,.72);outline:none
+    }
+    .interaction-dot{
+      width:9px;height:9px;border-radius:50%;border:1px solid rgba(170,235,250,.92);
+      background:rgba(80,190,220,.22)
+    }
+    .interaction-guide.active .interaction-dot{
+      background:rgba(120,225,250,.92);box-shadow:0 0 8px rgba(120,225,250,.68)
     }
 
-    .hotspot::after {
-      content: attr(data-label);
+    .main-hint,.toast{
+      position:fixed;left:50%;bottom:24px;transform:translate(-50%,10px);z-index:110;
+      max-width:min(90vw,470px);padding:10px 14px;border:1px solid rgba(190,225,235,.34);
+      border-radius:4px;background:rgba(7,13,17,.84);color:rgba(245,249,250,.94);
+      font-size:12px;text-align:center;opacity:0;pointer-events:none;
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      transition:opacity .22s ease,transform .22s ease
+    }
+    .main-hint.show,.toast.show{opacity:1;transform:translate(-50%,0)}
 
-      position: absolute;
-      left: 50%;
-      bottom: 10px;
-      transform: translate(-50%, 6px);
+    .panel-overlay{
+      position:fixed;inset:0;z-index:2000;display:grid;place-items:center;
+      visibility:hidden;opacity:0;pointer-events:none;background:#000;
+      transition:opacity .22s ease,visibility .22s ease
+    }
+    .panel-overlay.active{visibility:visible;opacity:1;pointer-events:auto}
 
-      max-width: calc(100% - 16px);
-      padding: 7px 10px;
+    .panel-random-bg{
+      position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;
+      background-repeat:no-repeat;opacity:.36;transform:scale(1.015);
+      transition:opacity .24s ease,transform .5s ease
+    }
+    .panel-overlay.active .panel-random-bg{transform:scale(1)}
 
-      border: 1px solid rgba(var(--spot-rgb), 0.48);
-      border-radius: 4px;
-
-      background: var(--label-bg);
-      color: var(--text);
-
-      font-size: clamp(10px, 0.88vw, 14px);
-      font-weight: 700;
-      line-height: 1.35;
-      letter-spacing: 0.025em;
-      text-align: center;
-      white-space: nowrap;
-
-      opacity: 0;
-      pointer-events: none;
-
-      transition:
-        opacity 160ms ease,
-        transform 160ms ease;
+    .panel-dimmer{
+      position:absolute;inset:0;z-index:1;
+      background:radial-gradient(circle at center,rgba(0,0,0,.48) 0%,rgba(0,0,0,.64) 62%,rgba(0,0,0,.78) 100%);
+      pointer-events:none
     }
 
-    .hotspot:hover,
-    .hotspot:focus-visible,
-    .main-stage.show-hotspots .hotspot {
-      animation-play-state: paused;
-      background: rgba(var(--spot-rgb), 0.24);
-      border-color: rgba(var(--spot-rgb), 0.82);
-      box-shadow:
-        inset 0 0 36px rgba(var(--spot-rgb), 0.12),
-        0 0 20px rgba(var(--spot-rgb), 0.22);
-      outline: none;
+    .panel-shell{
+      position:relative;z-index:3;width:min(92vw,1500px);height:min(88vh,900px);
+      border:1px solid rgba(190,225,235,.20);border-radius:8px;
+      background:rgba(4,9,13,.18);
+      box-shadow:0 20px 70px rgba(0,0,0,.52),0 0 36px rgba(80,160,200,.06);
+      overflow:hidden;transform:scale(.985);opacity:0;
+      transition:transform .22s ease,opacity .22s ease
+    }
+    .panel-overlay.active .panel-shell{transform:scale(1);opacity:1}
+
+    .panel-frame{display:block;width:100%;height:100%;border:0;background:transparent}
+
+    .panel-close{
+      position:absolute;z-index:8;top:14px;right:14px;width:42px;height:42px;
+      border:1px solid rgba(220,240,250,.24);border-radius:50%;
+      background:rgba(5,10,14,.58);color:#eef5f8;font-size:24px;font-weight:300;line-height:1;
+      cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      transition:background .15s ease,border-color .15s ease,transform .15s ease
+    }
+    .panel-close:hover,.panel-close:focus-visible{
+      background:rgba(28,56,72,.82);border-color:rgba(185,230,250,.66);transform:scale(1.05);outline:none
     }
 
-    .hotspot:hover::after,
-    .hotspot:focus-visible::after,
-    .main-stage.show-hotspots .hotspot::after {
-      opacity: 1;
-      transform: translate(-50%, 0);
+    @media (max-width:700px){
+      .interaction-guide{top:10px;right:10px;padding:7px 9px;font-size:10px}
+      .hotspot::after{bottom:5px;padding:5px 7px;font-size:9px;white-space:normal}
+      .panel-shell{width:94vw;height:90vh}
+      .panel-close{top:9px;right:9px;width:38px;height:38px}
     }
 
-    /* 각 영역별 색상 + 점멸 시간차 */
-
-    /* 휴게실 — 뉴스 / 단편 */
-    .hotspot-lounge {
-      --spot-rgb: 90, 190, 255;
-      left: 1.5%;
-      top: 2.0%;
-      width: 28.2%;
-      height: 36.0%;
-      animation-delay: 0s;
-    }
-
-    /* 장비 창고 — 카드 */
-    .hotspot-storage {
-      --spot-rgb: 205, 158, 42;
-      left: 29.6%;
-      top: 2.0%;
-      width: 17.5%;
-      height: 36.0%;
-      animation-delay: -1.2s;
-    }
-
-    /* 사무실 — 아카이브 */
-    .hotspot-office {
-      --spot-rgb: 92, 232, 190;
-      left: 0.8%;
-      top: 38.0%;
-      width: 46.2%;
-      height: 33.5%;
-      animation-delay: -2.4s;
-    }
-
-    /* 우측 엘리베이터 + 지하 하행 구역 — 체험판 */
-    .hotspot-elevator {
-      --spot-rgb: 245, 118, 128;
-      left: 72.0%;
-      top: 26.5%;
-      width: 27.2%;
-      height: 56.5%;
-      animation-delay: -3.6s;
-    }
-
-    /* =========================================================
-       RANDOM CHARACTER SLOT
-       추후 투명 PNG 스탠딩 일러스트 추가용
-       ========================================================= */
-    .character-slot {
-      position: absolute;
-      z-index: 30;
-
-      left: 51%;
-      bottom: 0;
-      transform: translateX(-50%);
-
-      width: 18%;
-      height: 62%;
-
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .character-slot.active {
-      display: flex;
-    }
-
-    .character-slot img {
-      display: block;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      object-position: bottom center;
-
-      filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
-      transform-origin: bottom center;
-
-      transition:
-        filter 160ms ease,
-        transform 160ms ease;
-    }
-
-    .character-slot:hover img,
-    .character-slot:focus-visible img {
-      filter:
-        brightness(1.08)
-        drop-shadow(0 8px 17px rgba(0, 0, 0, 0.52));
-      transform: translateY(-3px);
-    }
-
-    /* =========================================================
-       UI
-       ========================================================= */
-    .interaction-guide {
-      position: fixed;
-      z-index: 100;
-
-      top: 16px;
-      right: 16px;
-
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-
-      min-height: 38px;
-      padding: 8px 12px;
-
-      border: 1px solid var(--ui-border);
-      border-radius: 4px;
-
-      background: var(--ui-bg);
-      color: var(--text);
-
-      font: inherit;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-
-      cursor: pointer;
-      backdrop-filter: blur(7px);
-      -webkit-backdrop-filter: blur(7px);
-
-      transition:
-        background-color 160ms ease,
-        border-color 160ms ease;
-    }
-
-    .interaction-guide:hover,
-    .interaction-guide:focus-visible,
-    .interaction-guide.active {
-      background: rgba(20, 50, 60, 0.92);
-      border-color: rgba(155, 235, 255, 0.72);
-      outline: none;
-    }
-
-    .interaction-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      border: 1px solid rgba(170, 235, 250, 0.92);
-      background: rgba(80, 190, 220, 0.22);
-    }
-
-    .interaction-guide.active .interaction-dot {
-      background: rgba(120, 225, 250, 0.92);
-      box-shadow: 0 0 8px rgba(120, 225, 250, 0.68);
-    }
-
-    /* 첫 진입 시 짧게 보여주는 안내 */
-    .main-hint {
-      position: fixed;
-      z-index: 90;
-
-      left: 50%;
-      bottom: 24px;
-      transform: translate(-50%, 10px);
-
-      max-width: min(88vw, 460px);
-      padding: 10px 14px;
-
-      border: 1px solid rgba(190, 225, 235, 0.34);
-      border-radius: 4px;
-
-      background: rgba(7, 13, 17, 0.80);
-      color: rgba(245, 249, 250, 0.94);
-
-      font-size: 12px;
-      letter-spacing: 0.025em;
-      text-align: center;
-
-      opacity: 0;
-      pointer-events: none;
-
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-
-      transition:
-        opacity 220ms ease,
-        transform 220ms ease;
-    }
-
-    .main-hint.show {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 120;
-
-      left: 50%;
-      bottom: 24px;
-      transform: translate(-50%, 12px);
-
-      max-width: min(90vw, 440px);
-      padding: 10px 14px;
-
-      border: 1px solid var(--ui-border);
-      border-radius: 4px;
-
-      background: rgba(6, 12, 16, 0.92);
-      color: var(--text);
-
-      font-size: 13px;
-      text-align: center;
-
-      opacity: 0;
-      pointer-events: none;
-
-      transition:
-        opacity 180ms ease,
-        transform 180ms ease;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    /* 개발용 */
-    .main-stage.debug .hotspot {
-      animation: none;
-      background: rgba(255, 65, 65, 0.22);
-      border-color: rgba(255, 120, 120, 0.96);
-    }
-
-    .main-stage.debug .hotspot::after {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    @media (max-width: 700px) {
-      .interaction-guide {
-        top: 10px;
-        right: 10px;
-        padding: 7px 9px;
-        font-size: 10px;
-      }
-
-      .hotspot::after {
-        bottom: 5px;
-        padding: 5px 7px;
-        font-size: 9px;
-        white-space: normal;
-      }
-
-      .main-hint {
-        bottom: 14px;
-        font-size: 11px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .entry-curtain,
-      .hotspot,
-      .hotspot::after,
-      .main-hint,
-      .toast,
-      .character-slot img {
-        animation: none !important;
-        transition: none !important;
-      }
-
-      .hotspot {
-        background: rgba(var(--spot-rgb), 0.11);
-        border-color: rgba(var(--spot-rgb), 0.30);
-      }
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation:none!important;transition:none!important}
     }
   </style>
 </head>
 
 <body>
-
-  <!-- HOME에서 넘어온 직후 아주 잠깐 검은 화면을 유지한 뒤 MAIN을 보여준다. -->
   <div class="entry-curtain" id="entryCurtain" aria-hidden="true"></div>
 
-  <main
-    class="main-stage"
-    id="mainStage"
-    aria-label="Project ARGO NOTE 메인 거점"
-  >
+  <main class="main-stage" id="mainStage" aria-label="Project ARGO NOTE 메인 거점">
     <div class="scene">
+      <img class="main-bg" src="images/site-main.jpg"
+           alt="반지하 지하철 역사를 개조한 서울 생활권 확장 사업 거점"
+           draggable="false">
 
-      <img
-        class="main-bg"
-        src="images/site-main.jpg"
-        alt="반지하 지하철 역사를 개조한 서울 생활권 확장 사업 거점"
-        draggable="false"
-      >
+      <a class="hotspot hotspot-lounge"
+         href="lounge.html"
+         data-panel="lounge"
+         data-label="휴게실: 뉴스 및 단편 열람"
+         aria-label="휴게실: 뉴스 및 단편 열람"></a>
 
-      <a
-        class="hotspot hotspot-lounge"
-        href="#"
-        data-route="lounge"
-        data-label="휴게실: 뉴스 및 단편 열람"
-        aria-label="휴게실: 뉴스 및 단편 열람"
-      ></a>
+      <a class="hotspot hotspot-storage"
+         href="cards.html"
+         data-panel="cards"
+         data-label="장비 창고: 카드 열람"
+         aria-label="장비 창고: 카드 열람"></a>
 
-      <a
-        class="hotspot hotspot-storage"
-        href="#"
-        data-route="storage"
-        data-label="장비 창고: 카드 열람"
-        aria-label="장비 창고: 카드 열람"
-      ></a>
+      <a class="hotspot hotspot-office"
+         href="archive.html"
+         data-panel="archive"
+         data-label="사무실: 출입 명부 및 기록 확인"
+         aria-label="사무실: 출입 명부 및 기록 확인"></a>
 
-      <a
-        class="hotspot hotspot-office"
-        href="#"
-        data-route="office"
-        data-label="사무실: 출입 명부 및 기록 확인"
-        aria-label="사무실: 출입 명부 및 기록 확인"
-      ></a>
+      <a class="hotspot hotspot-elevator"
+         href="#"
+         data-route="gameplay"
+         data-label="체험판 테스트 플레이"
+         aria-label="체험판 테스트 플레이"></a>
 
-      <a
-        class="hotspot hotspot-elevator"
-        href="#"
-        data-route="gameplay"
-        data-label="체험판 테스트 플레이"
-        aria-label="체험판 테스트 플레이"
-      ></a>
-
-      <!-- 추후 랜덤 캐릭터 투명 PNG 표시 -->
-      <a
-        class="character-slot"
-        id="characterSlot"
-        href="#"
-        aria-label="오늘 거점에 있는 인물"
-      >
-        <img
-          id="characterImage"
-          src=""
-          alt=""
-          draggable="false"
-        >
+      <a class="character-slot" id="characterSlot" href="#" aria-label="오늘 거점에 있는 인물">
+        <img id="characterImage" src="" alt="" draggable="false">
       </a>
-
     </div>
   </main>
 
-  <button
-    class="interaction-guide"
-    id="interactionGuide"
-    type="button"
-    aria-pressed="false"
-    aria-controls="mainStage"
-  >
+  <button class="interaction-guide" id="interactionGuide" type="button"
+          aria-pressed="false" aria-controls="mainStage">
     <span class="interaction-dot" aria-hidden="true"></span>
     INTERACTION
   </button>
 
-  <div
-    class="main-hint"
-    id="mainHint"
-    aria-hidden="true"
-  >
+  <div class="main-hint" id="mainHint" aria-hidden="true">
     점멸하는 구역을 선택해 이동할 수 있습니다.
   </div>
 
-  <div
-    class="toast"
-    id="toast"
-    role="status"
-    aria-live="polite"
-  ></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <section class="panel-overlay" id="panelOverlay" aria-hidden="true">
+    <div class="panel-random-bg" id="panelRandomBg"></div>
+    <div class="panel-dimmer"></div>
+
+    <div class="panel-shell" id="panelShell">
+      <button class="panel-close" id="panelClose" type="button" aria-label="패널 닫기">×</button>
+      <iframe class="panel-frame" id="panelFrame"
+              title="Project ARGO NOTE 콘텐츠 패널"
+              src="about:blank"></iframe>
+    </div>
+  </section>
 
   <script>
-    /*
-      각 페이지가 완성되면 null 대신 실제 주소를 넣는다.
-      예:
-      lounge: "news.html",
-      storage: "cards.html",
-      office: "archive.html",
-      gameplay: "gameplay.html"
-    */
-    const ROUTES = {
-      lounge: null,
-      storage: null,
-      office: null,
-      gameplay: null
+    const PANEL_BACKGROUNDS = [
+      "images/BBG_01.jpg",
+      "images/BBG_02.jpg",
+      "images/BBG_03.jpg",
+      "images/BBG_04.jpg",
+      "images/BBG_05.jpg",
+      "images/BBG_06.jpg",
+      "images/BBG_07.jpg"
+    ];
+
+    const PANEL_PAGES = {
+      archive: "archive.html",
+      lounge: "lounge.html",
+      cards: "cards.html"
     };
 
-    const DEBUG_HOTSPOTS = false;
-
-    /*
-      추후 캐릭터 추가 예시:
-      {
-        name: "Plox",
-        image: "images/characters/plox.png",
-        link: "archive/plox.html"
-      }
-    */
     const CHARACTERS = [];
 
     const stage = document.getElementById("mainStage");
@@ -609,61 +277,104 @@
     const toast = document.getElementById("toast");
     const entryCurtain = document.getElementById("entryCurtain");
 
+    const panelOverlay = document.getElementById("panelOverlay");
+    const panelShell = document.getElementById("panelShell");
+    const panelFrame = document.getElementById("panelFrame");
+    const panelClose = document.getElementById("panelClose");
+    const panelRandomBg = document.getElementById("panelRandomBg");
+
     const characterSlot = document.getElementById("characterSlot");
     const characterImage = document.getElementById("characterImage");
 
-    if (DEBUG_HOTSPOTS) {
-      stage.classList.add("debug");
-    }
+    let toastTimer;
+    let lastBackgroundIndex = -1;
 
-    /*
-      MAIN 진입 효과:
-      페이지가 준비되면 0.12초 정도 검은 화면을 유지한 후
-      약 0.34초에 걸쳐 메인 화면을 드러낸다.
-    */
     window.addEventListener("load", () => {
-      setTimeout(() => {
-        entryCurtain.classList.add("hide");
-      }, 120);
-
-      setTimeout(() => {
-        mainHint.classList.add("show");
-      }, 650);
-
-      setTimeout(() => {
-        mainHint.classList.remove("show");
-      }, 4300);
+      setTimeout(() => entryCurtain.classList.add("hide"), 120);
+      setTimeout(() => mainHint.classList.add("show"), 650);
+      setTimeout(() => mainHint.classList.remove("show"), 4300);
     });
 
-    // 전체 상호작용 영역 표시/숨김
     guideButton.addEventListener("click", () => {
       const isActive = stage.classList.toggle("show-hotspots");
-
       guideButton.classList.toggle("active", isActive);
       guideButton.setAttribute("aria-pressed", String(isActive));
     });
 
-    // 아직 목적 페이지가 없으면 안내만 표시
-    document.querySelectorAll(".hotspot").forEach((hotspot) => {
+    document.querySelectorAll("[data-panel]").forEach((hotspot) => {
       hotspot.addEventListener("click", (event) => {
-        const routeName = hotspot.dataset.route;
-        const destination = ROUTES[routeName];
-
-        if (!destination) {
-          event.preventDefault();
-          showToast(`${hotspot.dataset.label} 페이지는 현재 준비 중입니다.`);
-          return;
-        }
-
-        hotspot.href = destination;
+        event.preventDefault();
+        const panelName = hotspot.dataset.panel;
+        const page = PANEL_PAGES[panelName];
+        if (page) openPanel(page);
       });
     });
 
-    let toastTimer;
+    function openPanel(page) {
+      setRandomPanelBackground();
+      panelFrame.src = page;
+      panelOverlay.classList.add("active");
+      panelOverlay.setAttribute("aria-hidden", "false");
+      mainHint.classList.remove("show");
+      guideButton.style.visibility = "hidden";
+    }
+
+    function closePanel() {
+      panelOverlay.classList.remove("active");
+      panelOverlay.setAttribute("aria-hidden", "true");
+      guideButton.style.visibility = "";
+
+      setTimeout(() => {
+        if (!panelOverlay.classList.contains("active")) {
+          panelFrame.src = "about:blank";
+        }
+      }, 240);
+    }
+
+    function setRandomPanelBackground() {
+      if (PANEL_BACKGROUNDS.length === 0) return;
+
+      let index;
+
+      if (PANEL_BACKGROUNDS.length === 1) {
+        index = 0;
+      } else {
+        do {
+          index = Math.floor(Math.random() * PANEL_BACKGROUNDS.length);
+        } while (index === lastBackgroundIndex);
+      }
+
+      lastBackgroundIndex = index;
+      panelRandomBg.style.backgroundImage =
+        `url("${PANEL_BACKGROUNDS[index]}")`;
+    }
+
+    panelClose.addEventListener("click", closePanel);
+
+    panelOverlay.addEventListener("click", (event) => {
+      if (event.target === panelOverlay || event.target === panelRandomBg) {
+        closePanel();
+      }
+    });
+
+    panelShell.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" &&
+          panelOverlay.classList.contains("active")) {
+        closePanel();
+      }
+    });
+
+    document.querySelector('[data-route="gameplay"]').addEventListener("click", (event) => {
+      event.preventDefault();
+      showToast("체험판 테스트 플레이 페이지는 현재 준비 중입니다.");
+    });
 
     function showToast(message) {
       clearTimeout(toastTimer);
-
       mainHint.classList.remove("show");
       toast.textContent = message;
       toast.classList.add("show");
@@ -673,7 +384,6 @@
       }, 1800);
     }
 
-    // 랜덤 캐릭터 표시
     if (CHARACTERS.length > 0) {
       const character =
         CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
@@ -685,12 +395,10 @@
         "aria-label",
         `${character.name} 개인 아카이브 열기`
       );
-
       characterSlot.classList.add("active");
     } else {
       characterSlot.removeAttribute("href");
     }
   </script>
-
 </body>
 </html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cards</title>
+<style>
+*{box-sizing:border-box}
+html,body{
+  margin:0;width:100%;min-height:100%;background:transparent;color:#edf3f6;
+  font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif
+}
+body{padding:34px}
+.inventory{
+  min-height:calc(100vh - 68px);padding:32px 36px;
+  background:rgba(15,28,34,.82);border:1px solid rgba(196,219,226,.20);
+  box-shadow:0 18px 60px rgba(0,0,0,.36);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)
+}
+.eyebrow{margin:0 0 8px;color:#9eaeb4;font-size:11px;letter-spacing:.22em}
+h1{margin:0;font-size:clamp(30px,4vw,52px);font-weight:600}
+.sub{margin:10px 0 30px;color:#c3cdd1}
+.tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:24px}
+.tab{padding:8px 13px;border:1px solid rgba(220,235,240,.18);background:rgba(255,255,255,.04);color:#dce5e8}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{min-height:170px;padding:18px;border:1px solid rgba(220,235,240,.15);background:rgba(255,255,255,.035)}
+.card strong{display:block;margin-bottom:9px;font-size:17px}
+.card span{color:#aebdc3;line-height:1.6;font-size:12px}
+@media(max-width:950px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+  body{padding:18px}.inventory{min-height:calc(100vh - 36px);padding:24px}.grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="inventory">
+  <p class="eyebrow">EQUIPMENT STORAGE / INVENTORY DATABASE</p>
+  <h1>CARD DATABASE</h1>
+  <p class="sub">장비 창고: 카드 열람 — 목록은 디스플레이형, 개별 상세는 추후 라벨형으로 확장</p>
+
+  <div class="tabs">
+    <div class="tab">전체</div>
+    <div class="tab">기록 카드</div>
+    <div class="tab">현장 장비</div>
+    <div class="tab">지원 카드</div>
+    <div class="tab">복합 카드</div>
+  </div>
+
+  <section class="grid">
+    <article class="card">
+      <strong>기록 카드</strong>
+      <span>사진, 문서, 생물 기록, 인터뷰, 시설 기록 등을 표시할 슬롯.</span>
+    </article>
+    <article class="card">
+      <strong>현장 장비 카드</strong>
+      <span>공구, 보호 장비, 소모품, 회수 장비 등을 표시할 슬롯.</span>
+    </article>
+    <article class="card">
+      <strong>지원 카드</strong>
+      <span>기업, 작업팀, NPC의 기술 지원 및 제한 사용 자산.</span>
+    </article>
+    <article class="card">
+      <strong>복합 카드</strong>
+      <span>시설 도면, 매뉴얼, 특수 부품 등 기록과 현장 효과를 함께 가진 카드.</span>
+    </article>
+  </section>
+</main>
+</body>
+</html>

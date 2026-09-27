@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive</title>
+<style>
+*{box-sizing:border-box}
+html,body{
+  margin:0;width:100%;min-height:100%;background:transparent;color:#edf3f6;
+  font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic",sans-serif
+}
+body{padding:34px}
+.panel{
+  min-height:calc(100vh - 68px);padding:34px 38px;
+  background:rgba(36,85,118,.34);
+  border:1px solid rgba(175,225,255,.36);
+  border-radius:8px;
+  box-shadow:inset 0 0 40px rgba(80,170,220,.04),0 0 34px rgba(80,170,220,.08);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)
+}
+.eyebrow{margin:0 0 6px;color:#a8b8c1;font-size:11px;letter-spacing:.24em}
+h1{margin:0;font-size:clamp(30px,4vw,54px);font-weight:500}
+.sub{margin:10px 0 34px;color:#c5d0d6;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{
+  min-height:180px;padding:22px;border:1px solid rgba(200,230,245,.18);
+  background:rgba(3,11,16,.22);color:inherit;text-decoration:none
+}
+.card:hover{background:rgba(40,100,132,.28);border-color:rgba(200,235,250,.42)}
+.card strong{display:block;margin-bottom:12px;font-size:20px;font-weight:500}
+.card span{color:#c4d0d6;line-height:1.7;font-size:13px}
+@media(max-width:850px){
+  body{padding:18px}.panel{min-height:calc(100vh - 36px);padding:24px}.grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<section class="panel">
+  <p class="eyebrow">SEOUL RESTORATION NETWORK / OFFICE</p>
+  <h1>ARCHIVE</h1>
+  <p class="sub">출입 명부 및 기록 확인</p>
+
+  <div class="grid">
+    <a class="card" href="#">
+      <strong>PERSONNEL</strong>
+      <span>인명 데이터베이스. 캐릭터 이미지, 기본 프로필, 소개 기록을 열람합니다.</span>
+    </a>
+    <a class="card" href="#">
+      <strong>WORLD RECORD</strong>
+      <span>지역, 시설, 사건, 생태 및 기술 관련 기록을 열람합니다.</span>
+    </a>
+    <a class="card" href="#">
+      <strong>FIELD LOG</strong>
+      <span>현장 조사와 복구 사업 과정에서 축적된 기록을 열람합니다.</span>
+    </a>
+  </div>
+</section>
+</body>
+</html>
