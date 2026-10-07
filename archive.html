@@ -24,59 +24,36 @@ body{
   padding:4.8vh 5.2vw;
 }
 
-/* =========================================================
-   ARCHIVE WINDOW
-   ========================================================= */
 .archive-window{
   position:relative;
-
   width:min(84vw,1480px);
   height:min(82vh,820px);
-
   display:flex;
   flex-direction:column;
-
   overflow:hidden;
-
   border:1px solid rgba(145,215,250,.66);
   border-radius:10px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(18,72,104,.60),
-      rgba(9,40,61,.54)
-    );
-
+  background:linear-gradient(180deg,rgba(18,72,104,.60),rgba(9,40,61,.54));
   box-shadow:
     0 24px 90px rgba(0,0,0,.48),
     0 0 24px rgba(92,196,245,.16),
     inset 0 0 42px rgba(85,190,235,.05);
-
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
 }
 
-/* =========================================================
-   TOP TAB BAR
-   ========================================================= */
 .archive-tabs{
   flex:0 0 auto;
-
   display:flex;
   align-items:center;
   gap:8px;
-
   padding:15px 22px;
-
   border-bottom:1px solid rgba(190,230,247,.14);
-
   background:rgba(2,14,22,.11);
 }
 
 .archive-brand{
   margin-right:auto;
-
   color:rgba(218,237,246,.50);
   font-size:9px;
   letter-spacing:.17em;
@@ -84,18 +61,14 @@ body{
 
 .archive-tab{
   padding:8px 14px;
-
   border:1px solid rgba(190,230,247,.14);
   border-radius:4px;
-
   background:rgba(4,21,31,.14);
   color:#c6d5dc;
-
   font:inherit;
   font-size:11px;
   font-weight:700;
   letter-spacing:.06em;
-
   cursor:pointer;
 }
 
@@ -117,11 +90,7 @@ body{
   overflow:hidden;
 }
 
-/* =========================================================
-   WORLD VIEW
-   - 별도의 큰 "세계관" 제목은 두지 않는다.
-   - 짧은 문서 항목을 쌓아 읽는 구조.
-   ========================================================= */
+/* WORLD */
 .world-view{
   height:100%;
   padding:26px 32px 34px;
@@ -131,25 +100,19 @@ body{
 .world-subtabs{
   display:flex;
   gap:8px;
-
   margin-bottom:18px;
   padding-bottom:12px;
-
   border-bottom:1px solid rgba(190,230,247,.13);
 }
 
 .world-subtab{
   padding:7px 12px;
-
   border:0;
   border-bottom:2px solid transparent;
-
   background:transparent;
   color:#9fb0ba;
-
   font:inherit;
   font-size:12px;
-
   cursor:pointer;
 }
 
@@ -172,10 +135,8 @@ body{
 
 .world-entry{
   padding:16px 18px;
-
   border:1px solid rgba(190,230,247,.10);
   border-radius:5px;
-
   background:rgba(2,13,20,.12);
 }
 
@@ -183,9 +144,7 @@ body{
   display:flex;
   align-items:center;
   gap:9px;
-
   margin:0 0 7px;
-
   color:#eaf4f8;
   font-size:14px;
   font-weight:600;
@@ -199,37 +158,27 @@ body{
 
 .world-entry p{
   margin:0;
-
   color:#cad7dc;
   font-size:13px;
   line-height:1.8;
 }
 
-/* =========================================================
-   SETTINGS VIEW
-   좌측: "개념: 워프 장치", "사건: 외계 전쟁" 식 목록
-   우측: 이미지 + 텍스트
-   이미지와 글 사이에는 경계선을 두지 않는다.
-   ========================================================= */
+/* SETTINGS / REGIONS 공통 */
 .setting-view{
   height:100%;
-
   display:grid;
   grid-template-columns:280px 1fr;
 }
 
 .setting-index{
   padding:24px 18px;
-
   overflow:auto;
-
   border-right:1px solid rgba(190,230,247,.13);
 }
 
 .setting-index-label{
   margin:0 0 13px;
   padding:0 8px;
-
   color:rgba(216,235,244,.46);
   font-size:9px;
   letter-spacing:.17em;
@@ -237,20 +186,15 @@ body{
 
 .setting-button{
   width:100%;
-
   padding:12px 10px;
-
   border:0;
   border-bottom:1px solid rgba(190,230,247,.08);
-
   background:transparent;
   color:#bdccd3;
-
   font:inherit;
   font-size:12px;
   line-height:1.5;
   text-align:left;
-
   cursor:pointer;
 }
 
@@ -263,15 +207,12 @@ body{
 }
 
 .setting-detail{
-  height:100%;
-  padding:22px 30px 24px;
-
-  overflow:hidden;
+  padding:28px 34px 34px;
+  overflow:auto;
 }
 
 .setting-kicker{
   margin:0 0 7px;
-
   color:rgba(207,228,238,.48);
   font-size:9px;
   letter-spacing:.16em;
@@ -279,22 +220,11 @@ body{
 
 .setting-image{
   position:relative;
-
   width:100%;
-  height:72%;
-  min-height:420px;
-  max-height:560px;
-
-  margin-bottom:14px;
-
+  aspect-ratio:16/8.3;
+  margin-bottom:22px;
   overflow:hidden;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(29,74,98,.28),
-      rgba(5,25,37,.34)
-    );
+  background:linear-gradient(135deg,rgba(29,74,98,.28),rgba(5,25,37,.34));
 }
 
 .setting-image img{
@@ -307,10 +237,8 @@ body{
 .setting-image-placeholder{
   position:absolute;
   inset:0;
-
   display:grid;
   place-items:center;
-
   color:rgba(214,235,245,.38);
   font-size:10px;
   letter-spacing:.12em;
@@ -318,7 +246,6 @@ body{
 
 .setting-detail h1{
   margin:0 0 7px;
-
   color:#fff;
   font-size:29px;
   font-weight:600;
@@ -326,27 +253,29 @@ body{
 
 .setting-short{
   margin:0 0 8px;
-
   color:#d9e4e9;
   font-size:13px;
-  line-height:1.5;
+  line-height:1.65;
 }
 
 .setting-body{
   color:#bdcbd1;
   font-size:12px;
-  line-height:1.5;
+  line-height:1.65;
 }
 
 .setting-body p{
-  margin:0 0 4px;
+  margin:0 0 8px;
 }
 
-/* =========================================================
-   PERSONNEL ROSTER
-   대표 이미지 + 이름만 보여주는 명부.
-   별도 필터 버튼 없음.
-   ========================================================= */
+.empty-state{
+  padding:30px;
+  color:#b9c9d0;
+  font-size:13px;
+  line-height:1.8;
+}
+
+/* PERSONNEL ROSTER */
 .personnel-roster{
   height:100%;
   padding:28px 30px 34px;
@@ -355,7 +284,6 @@ body{
 
 .roster-note{
   margin:0 0 18px;
-
   color:rgba(210,231,240,.52);
   font-size:10px;
   letter-spacing:.10em;
@@ -369,22 +297,13 @@ body{
 
 .roster-card{
   position:relative;
-
   min-height:220px;
-
   overflow:hidden;
-
   border:1px solid rgba(190,230,247,.13);
   border-radius:5px;
-
   background:rgba(2,13,20,.13);
-
   cursor:pointer;
-
-  transition:
-    transform .16s ease,
-    border-color .16s ease,
-    background .16s ease;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease;
 }
 
 .roster-card:hover,
@@ -398,12 +317,9 @@ body{
 .roster-image{
   width:100%;
   aspect-ratio:16/10;
-
   display:grid;
   place-items:center;
-
   overflow:hidden;
-
   background:rgba(3,17,26,.28);
 }
 
@@ -422,57 +338,43 @@ body{
 
 .roster-name{
   padding:13px 15px 14px;
-
   color:#f0f6f8;
   font-size:15px;
   font-weight:600;
 }
 
-/* =========================================================
-   PERSONNEL DETAIL
-   ========================================================= */
+/* PERSONNEL DETAIL */
 .personnel-detail{
   height:100%;
-
   display:grid;
   grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
 }
 
 .viewer{
   min-width:0;
-
   padding:28px 28px 24px;
-
   display:flex;
   flex-direction:column;
-
   border-right:1px solid rgba(190,230,247,.15);
 }
 
 .viewer-main{
   position:relative;
-
   flex:1;
   min-height:0;
-
   display:grid;
   place-items:center;
-
   overflow:hidden;
-
   border:1px solid rgba(190,230,247,.19);
   border-radius:5px;
-
   background:rgba(2,12,19,.25);
 }
 
 .viewer-main::before{
   content:"PERSONNEL IMAGE VIEWER";
-
   position:absolute;
   left:16px;
   top:13px;
-
   color:rgba(220,238,246,.43);
   font-size:9px;
   letter-spacing:.18em;
@@ -494,7 +396,6 @@ body{
 .thumb-row{
   height:72px;
   margin-top:10px;
-
   display:grid;
   grid-template-columns:repeat(5,1fr);
   gap:8px;
@@ -503,15 +404,11 @@ body{
 .thumb{
   display:grid;
   place-items:center;
-
   border:1px solid rgba(195,228,242,.16);
   border-radius:4px;
-
   background:rgba(4,18,27,.22);
   color:#cbd9df;
-
   font-size:10px;
-
   cursor:pointer;
 }
 
@@ -522,58 +419,44 @@ body{
 
 .profile{
   min-width:0;
-
   padding:32px 36px 28px;
-
   overflow:auto;
 }
 
 .back-roster{
   margin:0 0 18px;
   padding:6px 0;
-
   border:0;
   background:transparent;
   color:#a9c1cd;
-
   font:inherit;
   font-size:10px;
   letter-spacing:.08em;
-
   cursor:pointer;
 }
 
-.back-roster:hover{
-  color:#fff;
-}
+.back-roster:hover{color:#fff}
 
 .profile-name{
   display:flex;
   align-items:baseline;
   gap:13px;
-
   margin:0 0 11px;
 }
 
 .profile-name h1{
   margin:0;
-
   color:#fff;
   font-size:36px;
   font-weight:600;
 }
 
-.meta{
-  color:#aebdc5;
-  font-size:12px;
-}
+.meta{color:#aebdc5;font-size:12px}
 
 .quote{
   margin:0 0 25px;
   padding-left:11px;
-
   border-left:2px solid rgba(113,203,245,.68);
-
   color:#d1dbe0;
   font-size:14px;
   font-style:italic;
@@ -582,7 +465,6 @@ body{
 .info-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-
   column-gap:40px;
   row-gap:14px;
 }
@@ -594,39 +476,23 @@ body{
   gap:9px;
 }
 
-.info-wide{
-  margin-top:14px;
-}
-
-.label{
-  color:#9eb0ba;
-  font-size:12px;
-}
-
-.value{
-  color:#f0f4f6;
-  font-size:13px;
-  line-height:1.6;
-}
+.info-wide{margin-top:14px}
+.label{color:#9eb0ba;font-size:12px}
+.value{color:#f0f4f6;font-size:13px;line-height:1.6}
 
 .divider{
   margin:23px 0 17px;
   height:1px;
-
   background:rgba(216,235,244,.34);
 }
 
 .summary{
   margin:0;
-
   color:#d9e1e5;
   font-size:13px;
   line-height:1.9;
 }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
 @media(max-width:920px){
   body{
     padding:3vh 3vw;
@@ -639,13 +505,8 @@ body{
     min-height:90vh;
   }
 
-  .archive-tabs{
-    flex-wrap:wrap;
-  }
-
-  .archive-brand{
-    width:100%;
-  }
+  .archive-tabs{flex-wrap:wrap}
+  .archive-brand{width:100%}
 
   .setting-view,
   .personnel-detail{
@@ -662,15 +523,11 @@ body{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
-  .viewer{
-    min-height:500px;
-  }
+  .viewer{min-height:500px}
 }
 
 @media(max-width:620px){
-  .roster-grid{
-    grid-template-columns:1fr;
-  }
+  .roster-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -688,11 +545,22 @@ body{
     <button class="archive-tab" data-view="personnel" type="button">인물</button>
   </nav>
 
-  <section class="archive-content" id="archiveContent"></section>
+  <section class="archive-content" id="archiveContent">
+    <div class="empty-state">ARCHIVE DATA LOADING...</div>
+  </section>
 
 </main>
 
 <script>
+let WORLD_DATA = {background:[], concept:[], group:[]};
+let REGION_DATA = [];
+let SETTING_DATA = [];
+let PERSONNEL_DATA = [];
+
+const archiveBody = document.getElementById("archiveBody");
+const archiveWindow = document.getElementById("archiveWindow");
+const archiveContent = document.getElementById("archiveContent");
+const tabs = [...document.querySelectorAll(".archive-tab")];
 
 function escapeHtml(value){
   return String(value ?? "")
@@ -703,39 +571,40 @@ function escapeHtml(value){
     .replaceAll("'","&#039;");
 }
 
-function paragraphs(text){
-  const raw = String(text ?? "").trim();
-  if(!raw) return "";
-  return raw
-    .split(/\n\s*\n/)
-    .map(p => `<p>${escapeHtml(p).replaceAll("\n","<br>")}</p>`)
-    .join("");
+function visibleItems(items){
+  return (Array.isArray(items) ? items : []).filter(item=>item?.visible !== false);
+}
+
+function bodyParagraphs(body){
+  if(Array.isArray(body)){
+    return body.filter(Boolean);
+  }
+
+  if(typeof body === "string"){
+    return body
+      .split(/\n\s*\n|\n/)
+      .map(x=>x.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function normalizeItems(data){
+  if(Array.isArray(data)) return data;
+  if(Array.isArray(data?.items)) return data.items;
+  return [];
 }
 
 async function loadJson(path){
-  const response = await fetch(path, {cache:"no-store"});
-  if(!response.ok) throw new Error(`${path}: ${response.status}`);
+  const response = await fetch(path,{cache:"no-store"});
+  if(!response.ok){
+    throw new Error(`${path} (${response.status})`);
+  }
   return response.json();
 }
 
-
-const archiveBody = document.getElementById("archiveBody");
-const archiveWindow = document.getElementById("archiveWindow");
-const archiveContent = document.getElementById("archiveContent");
-const tabs = [...document.querySelectorAll(".archive-tab")];
-
-let WORLD_DATA = {background:[], concept:[], group:[]};
-let REGION_DATA = [];
-let SETTING_DATA = [];
-let PERSONNEL_DATA = [];
-
-function visibleItems(items){
-  return (Array.isArray(items) ? items : []).filter(item => item.visible !== false);
-}
-
-/* =========================================================
-   WORLD
-   ========================================================= */
+/* WORLD */
 function renderWorld(){
   archiveContent.innerHTML = `
     <section class="world-view">
@@ -744,6 +613,7 @@ function renderWorld(){
         <button class="world-subtab" data-world="concept" type="button">개념</button>
         <button class="world-subtab" data-world="group" type="button">집단</button>
       </nav>
+
       <div class="world-doc" id="worldDoc"></div>
     </section>
   `;
@@ -751,15 +621,18 @@ function renderWorld(){
   const worldDoc = document.getElementById("worldDoc");
 
   function showWorld(key){
-    const list = Array.isArray(WORLD_DATA[key]) ? WORLD_DATA[key] : [];
-    worldDoc.innerHTML = list.length
-      ? list.map(item=>`
-          <article class="world-entry">
-            <h2 class="world-entry-title">${escapeHtml(item.title)}</h2>
-            <p>${escapeHtml(item.text)}</p>
-          </article>
-        `).join("")
-      : `<article class="world-entry"><p>등록된 항목이 없습니다.</p></article>`;
+    const items = visibleItems(WORLD_DATA?.[key]);
+
+    if(!items.length){
+      worldDoc.innerHTML = `<div class="empty-state">등록된 항목이 없습니다.</div>`;
+    }else{
+      worldDoc.innerHTML = items.map(item=>`
+        <article class="world-entry">
+          <h2 class="world-entry-title">${escapeHtml(item.title)}</h2>
+          <p>${escapeHtml(item.text)}</p>
+        </article>
+      `).join("");
+    }
 
     archiveContent.querySelectorAll(".world-subtab").forEach(button=>{
       button.classList.toggle("active",button.dataset.world===key);
@@ -773,60 +646,80 @@ function renderWorld(){
   showWorld("background");
 }
 
-/* =========================================================
-   SETTINGS
-   ========================================================= */
-function renderSetting(){
-  const items = visibleItems(SETTING_DATA);
+/* SETTINGS / REGION 공통 */
+function renderCatalog(items, options){
+  const list = visibleItems(items);
+  const {
+    indexLabel = "ARCHIVE INDEX",
+    defaultKicker = "ARCHIVE",
+    placeholder = "ARCHIVE IMAGE"
+  } = options;
 
   archiveContent.innerHTML = `
     <section class="setting-view">
       <aside class="setting-index">
-        <p class="setting-index-label">ARCHIVE INDEX</p>
+        <p class="setting-index-label">${escapeHtml(indexLabel)}</p>
+
         ${
-          items.length
-            ? items.map((item,index)=>`
-                <button
-                  class="setting-button ${index===0 ? "active" : ""}"
-                  type="button"
-                  data-index="${index}"
-                >${escapeHtml(item.label || item.title)}</button>
-              `).join("")
-            : `<div class="setting-button">등록된 설정이 없습니다.</div>`
+          list.length
+            ? list.map((item,index)=>`
+              <button
+                class="setting-button ${index===0 ? "active" : ""}"
+                type="button"
+                data-index="${index}"
+              >
+                ${escapeHtml(item.label || item.title || `ITEM ${index+1}`)}
+              </button>
+            `).join("")
+            : `<div class="empty-state">등록된 항목이 없습니다.</div>`
         }
       </aside>
 
-      <article class="setting-detail" id="settingDetail"></article>
+      <article class="setting-detail" id="catalogDetail"></article>
     </section>
   `;
 
-  const detail = document.getElementById("settingDetail");
+  const detail = document.getElementById("catalogDetail");
 
-  function showSetting(index){
-    const item = items[index];
+  function showItem(index){
+    const item = list[index];
+
     if(!item){
-      detail.innerHTML = `<p class="setting-short">등록된 설정이 없습니다.</p>`;
+      detail.innerHTML = `<div class="empty-state">등록된 항목이 없습니다.</div>`;
       return;
     }
 
+    const title = item.title || item.label || "";
+    const kicker = item.type || defaultKicker;
+    const image = item.image || "";
+    const short = item.short || item.text || "";
+    const paragraphs = bodyParagraphs(item.body);
+
     detail.innerHTML = `
-      <p class="setting-kicker">${escapeHtml(item.type || "SETTING")}</p>
+      <p class="setting-kicker">${escapeHtml(kicker)}</p>
 
       <div class="setting-image">
         ${
-          item.image
-            ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">`
+          image
+            ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(title)}"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">`
             : ``
         }
-        <div class="setting-image-placeholder" style="${item.image ? "display:none;" : ""}">
-          SETTING IMAGE
+
+        <div
+          class="setting-image-placeholder"
+          style="${image ? "display:none;" : ""}"
+        >
+          ${escapeHtml(placeholder)}
         </div>
       </div>
 
-      <h1>${escapeHtml(item.title)}</h1>
-      <p class="setting-short">${escapeHtml(item.short)}</p>
-      <div class="setting-body">${paragraphs(item.body)}</div>
+      <h1>${escapeHtml(title)}</h1>
+      <p class="setting-short">${escapeHtml(short)}</p>
+
+      <div class="setting-body">
+        ${paragraphs.map(p=>`<p>${escapeHtml(p)}</p>`).join("")}
+      </div>
     `;
   }
 
@@ -834,60 +727,83 @@ function renderSetting(){
     button.addEventListener("click",()=>{
       archiveContent.querySelectorAll(".setting-button").forEach(b=>b.classList.remove("active"));
       button.classList.add("active");
-      showSetting(Number(button.dataset.index));
+      showItem(Number(button.dataset.index));
     });
   });
 
-  showSetting(0);
+  showItem(0);
 }
 
-/* =========================================================
-   PERSONNEL ROSTER
-   ========================================================= */
+function renderRegion(){
+  renderCatalog(REGION_DATA,{
+    indexLabel:"REGION INDEX",
+    defaultKicker:"REGION",
+    placeholder:"REGION IMAGE"
+  });
+}
+
+function renderSetting(){
+  renderCatalog(SETTING_DATA,{
+    indexLabel:"ARCHIVE INDEX",
+    defaultKicker:"SETTING",
+    placeholder:"SETTING IMAGE"
+  });
+}
+
+/* PERSONNEL */
 function renderPersonnelRoster(){
-  const items = visibleItems(PERSONNEL_DATA);
+  const list = visibleItems(PERSONNEL_DATA);
 
   archiveContent.innerHTML = `
     <section class="personnel-roster">
       <p class="roster-note">REGISTERED PERSONNEL / 명부에 등록된 인원</p>
 
-      <div class="roster-grid">
-        ${
-          items.length
-            ? items.map((person,index)=>`
+      ${
+        list.length
+          ? `<div class="roster-grid">
+              ${list.map((person,index)=>`
                 <button class="roster-card" type="button" data-index="${index}">
                   <div class="roster-image">
                     ${
                       person.cover
                         ? `<img src="${escapeHtml(person.cover)}" alt="${escapeHtml(person.name)}"
-                                onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`
+                            onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`
                         : ``
                     }
                     <span class="roster-placeholder" style="${person.cover ? "display:none;" : ""}">
                       REPRESENTATIVE IMAGE
                     </span>
                   </div>
-                  <div class="roster-name">${escapeHtml(person.name)}</div>
+
+                  <div class="roster-name">${escapeHtml(person.name || "UNKNOWN")}</div>
                 </button>
-              `).join("")
-            : `<div class="roster-note">등록된 인물이 없습니다.</div>`
-        }
-      </div>
+              `).join("")}
+            </div>`
+          : `<div class="empty-state">등록된 인물이 없습니다.</div>`
+      }
     </section>
   `;
 
   archiveContent.querySelectorAll(".roster-card").forEach(card=>{
-    card.addEventListener("click",()=>renderPersonnelDetail(items, Number(card.dataset.index)));
+    card.addEventListener("click",()=>{
+      renderPersonnelDetail(Number(card.dataset.index), list);
+    });
   });
 }
 
-function renderPersonnelDetail(items,index){
-  const person = items[index];
-  if(!person) return renderPersonnelRoster();
+function renderPersonnelDetail(index, list = visibleItems(PERSONNEL_DATA)){
+  const person = list[index];
 
-  const gallery = Array.isArray(person.gallery) && person.gallery.length
-    ? person.gallery
-    : [null,null,null,null,null];
+  if(!person){
+    renderPersonnelRoster();
+    return;
+  }
+
+  const rawGallery = Array.isArray(person.gallery) ? person.gallery.filter(Boolean) : [];
+  const gallery = rawGallery.length ? rawGallery : [null,null,null,null,null];
+  const outfits = Array.isArray(person.outfits)
+    ? person.outfits
+    : (typeof person.outfits === "string" ? [person.outfits] : []);
 
   archiveContent.innerHTML = `
     <section class="personnel-detail">
@@ -902,7 +818,7 @@ function renderPersonnelDetail(items,index){
         </div>
 
         <div class="thumb-row">
-          ${Array.from({length:5},(_,i)=>`
+          ${gallery.slice(0,5).map((img,i)=>`
             <button class="thumb ${i===0 ? "active" : ""}" type="button" data-index="${i}">
               ${i===4 ? "SHEET" : String(i+1).padStart(2,"0")}
             </button>
@@ -914,35 +830,54 @@ function renderPersonnelDetail(items,index){
         <button class="back-roster" id="backRoster" type="button">← PERSONNEL LIST</button>
 
         <div class="profile-name">
-          <h1>${escapeHtml(person.name)}</h1>
-          <span class="meta">(${escapeHtml(person.age)} / ${escapeHtml(person.gender)})</span>
+          <h1>${escapeHtml(person.name || "UNKNOWN")}</h1>
+          <span class="meta">(${escapeHtml(person.age || "-")} / ${escapeHtml(person.gender || "-")})</span>
         </div>
 
-        <p class="quote">“${escapeHtml(person.quote)}”</p>
+        <p class="quote">“${escapeHtml(person.quote || "")}”</p>
 
         <div class="info-grid">
-          <div class="info-pair"><span class="label">분류</span><span class="value">${escapeHtml(person.species)}</span></div>
-          <div class="info-pair"><span class="label">출신</span><span class="value">${escapeHtml(person.origin)}</span></div>
-          <div class="info-pair"><span class="label">직업</span><span class="value">${escapeHtml(person.job)}</span></div>
-          <div class="info-pair"><span class="label">소속</span><span class="value">${escapeHtml(person.affiliation)}</span></div>
+          <div class="info-pair">
+            <span class="label">분류</span>
+            <span class="value">${escapeHtml(person.species || "-")}</span>
+          </div>
+          <div class="info-pair">
+            <span class="label">출신</span>
+            <span class="value">${escapeHtml(person.origin || "-")}</span>
+          </div>
+          <div class="info-pair">
+            <span class="label">직업</span>
+            <span class="value">${escapeHtml(person.job || "-")}</span>
+          </div>
+          <div class="info-pair">
+            <span class="label">소속</span>
+            <span class="value">${escapeHtml(person.affiliation || "-")}</span>
+          </div>
         </div>
 
-        <div class="info-wide"><span class="label">외모</span><span class="value">${escapeHtml(person.appearance)}</span></div>
+        <div class="info-wide">
+          <span class="label">외모</span>
+          <span class="value">${escapeHtml(person.appearance || "-")}</span>
+        </div>
 
         <div class="info-wide">
           <span class="label">복장</span>
           <span class="value">${
-            (Array.isArray(person.outfits) ? person.outfits : [])
-              .map((x,i)=>`${String.fromCharCode(65+i)}. ${escapeHtml(x)}`)
-              .join("<br>")
+            outfits.length
+              ? outfits.map((x,i)=>`${String.fromCharCode(65+i)}. ${escapeHtml(x)}`).join("<br>")
+              : "-"
           }</span>
         </div>
 
-        <div class="info-wide"><span class="label">특기</span><span class="value">${escapeHtml(person.specialty)}</span></div>
+        <div class="info-wide">
+          <span class="label">특기</span>
+          <span class="value">${escapeHtml(person.specialty || "-")}</span>
+        </div>
 
         <div class="divider"></div>
-        <p class="summary">${escapeHtml(person.summary)}</p>
+        <p class="summary">${escapeHtml(person.summary || "")}</p>
       </section>
+
     </section>
   `;
 
@@ -954,6 +889,7 @@ function renderPersonnelDetail(items,index){
   thumbs.forEach(button=>{
     button.addEventListener("click",()=>{
       const i = Number(button.dataset.index);
+
       thumbs.forEach(b=>b.classList.remove("active"));
       button.classList.add("active");
 
@@ -966,9 +902,14 @@ function renderPersonnelDetail(items,index){
   });
 }
 
+/* TAB */
 function switchArchive(view){
-  tabs.forEach(tab=>tab.classList.toggle("active",tab.dataset.view===view));
+  tabs.forEach(tab=>{
+    tab.classList.toggle("active",tab.dataset.view===view);
+  });
+
   if(view==="world") renderWorld();
+  if(view==="region") renderRegion();
   if(view==="setting") renderSetting();
   if(view==="personnel") renderPersonnelRoster();
 }
@@ -977,30 +918,43 @@ tabs.forEach(tab=>{
   tab.addEventListener("click",()=>switchArchive(tab.dataset.view));
 });
 
+/* 패널 외부 클릭 → MAIN */
 archiveBody.addEventListener("click",(event)=>{
   if(!archiveWindow.contains(event.target)){
     parent.postMessage("ARGO_CLOSE_PANEL","*");
   }
 });
 
-archiveWindow.addEventListener("click",(event)=>event.stopPropagation());
+archiveWindow.addEventListener("click",(event)=>{
+  event.stopPropagation();
+});
 
+/* DATA LOAD */
 async function bootArchive(){
   try{
-    const [world,settings,personnel] = await Promise.all([
+    const [world,regions,settings,personnel] = await Promise.all([
       loadJson("content/archive/world.json"),
+      loadJson("content/archive/regions.json"),
       loadJson("content/archive/settings.json"),
       loadJson("content/archive/personnel.json")
     ]);
 
     WORLD_DATA = world || WORLD_DATA;
-    SETTING_DATA = settings?.items || [];
-    PERSONNEL_DATA = personnel?.items || [];
-  }catch(error){
-    console.error("ARCHIVE content load failed:",error);
-  }
+    REGION_DATA = normalizeItems(regions);
+    SETTING_DATA = normalizeItems(settings);
+    PERSONNEL_DATA = normalizeItems(personnel);
 
-  switchArchive("world");
+    switchArchive("world");
+  }catch(error){
+    console.error(error);
+
+    archiveContent.innerHTML = `
+      <div class="empty-state">
+        아카이브 데이터를 불러오지 못했습니다.<br>
+        content/archive 폴더의 JSON 파일 이름과 경로를 확인해 주세요.
+      </div>
+    `;
+  }
 }
 
 bootArchive();
