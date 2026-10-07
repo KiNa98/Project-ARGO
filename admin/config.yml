@@ -1,63 +1,32 @@
-# Project ARGO NOTE / Decap CMS
-# GitHub Pages는 그대로 유지하고, GitHub 저장소의 JSON 콘텐츠를 CMS가 수정하는 구조입니다.
-#
-# 중요: /admin/에서 실제 로그인·게시를 하려면 GitHub OAuth 인증 연결이 별도로 필요합니다.
-# 현재 설정은 GitHub backend 기준입니다.
-
 backend:
   name: github
   repo: KiNa98/Project-ARGO
   branch: main
   use_graphql: true
 
-site_url: https://kina98.github.io/Project-ARGO/
-display_url: https://kina98.github.io/Project-ARGO/
+media_folder: "images/uploads"
+public_folder: "images/uploads"
 
-# CMS에서 업로드한 이미지는 저장소의 images/uploads/에 들어갑니다.
-media_folder: images/uploads
-public_folder: /Project-ARGO/images/uploads
-
-publish_mode: simple
+locale: "ko"
 
 collections:
-
-  # ============================================================
-  # ARCHIVE
-  # ============================================================
-  - label: "ARCHIVE"
-    name: "archive"
+  - name: "archive"
+    label: "아카이브"
     files:
 
       - label: "세계관"
         name: "world"
         file: "content/archive/world.json"
         fields:
-          - label: "배경"
-            name: "background"
+          - label: "세계관 항목"
+            name: "items"
             widget: "list"
             collapsed: true
             summary: "{{fields.title}}"
             fields:
               - { label: "제목", name: "title", widget: "string" }
-              - { label: "1~2문장 설명", name: "text", widget: "text" }
-
-          - label: "개념"
-            name: "concept"
-            widget: "list"
-            collapsed: true
-            summary: "{{fields.title}}"
-            fields:
-              - { label: "제목", name: "title", widget: "string" }
-              - { label: "1~2문장 설명", name: "text", widget: "text" }
-
-          - label: "집단"
-            name: "group"
-            widget: "list"
-            collapsed: true
-            summary: "{{fields.title}}"
-            fields:
-              - { label: "제목", name: "title", widget: "string" }
-              - { label: "1~2문장 설명", name: "text", widget: "text" }
+              - { label: "설명", name: "text", widget: "text" }
+              - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
 
       - label: "설정"
         name: "settings"
@@ -69,118 +38,111 @@ collections:
             collapsed: true
             summary: "{{fields.label}}"
             fields:
-              - { label: "목록 표기", name: "label", widget: "string", hint: "예: 개념: 워프 장치 / 사건: 외계 전쟁" }
-              - { label: "분류 코드", name: "type", widget: "string", default: "CONCEPT" }
+              - { label: "목록 표시명", name: "label", widget: "string" }
+              - { label: "분류", name: "type", widget: "string", required: false }
               - { label: "제목", name: "title", widget: "string" }
               - { label: "대표 이미지", name: "image", widget: "image", required: false }
               - { label: "짧은 설명", name: "short", widget: "text" }
-              - { label: "본문", name: "body", widget: "text", required: false, hint: "3~4줄 정도. 빈 줄을 넣으면 문단이 나뉩니다." }
+              - label: "상세 설명"
+                name: "body"
+                widget: "list"
+                required: false
+                field:
+                  label: "문단"
+                  name: "paragraph"
+                  widget: "text"
+              - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
+
+      - label: "지역"
+        name: "regions"
+        file: "content/archive/regions.json"
+        fields:
+          - label: "지역 목록"
+            name: "items"
+            widget: "list"
+            collapsed: true
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "목록 표시명", name: "label", widget: "string", required: false }
+              - { label: "분류", name: "type", widget: "string", required: false }
+              - { label: "지역명", name: "title", widget: "string" }
+              - { label: "대표 이미지", name: "image", widget: "image", required: false }
+              - { label: "짧은 설명", name: "short", widget: "text" }
+              - label: "상세 설명"
+                name: "body"
+                widget: "list"
+                required: false
+                field:
+                  label: "문단"
+                  name: "paragraph"
+                  widget: "text"
+              - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
+
+      - label: "집단"
+        name: "groups"
+        file: "content/archive/groups.json"
+        fields:
+          - label: "집단 목록"
+            name: "items"
+            widget: "list"
+            collapsed: true
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "목록 표시명", name: "label", widget: "string", required: false }
+              - { label: "분류", name: "type", widget: "string", required: false }
+              - { label: "집단명", name: "title", widget: "string" }
+              - { label: "상징 이미지 / 로고", name: "image", widget: "image", required: false }
+              - { label: "짧은 설명", name: "short", widget: "text" }
+              - label: "상세 설명"
+                name: "body"
+                widget: "list"
+                required: false
+                field:
+                  label: "문단"
+                  name: "paragraph"
+                  widget: "text"
               - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
 
       - label: "인물"
         name: "personnel"
         file: "content/archive/personnel.json"
         fields:
-          - label: "인물 명부"
+          - label: "인물 목록"
             name: "items"
             widget: "list"
             collapsed: true
             summary: "{{fields.name}}"
             fields:
               - { label: "이름", name: "name", widget: "string" }
-              - { label: "명부 대표 이미지", name: "cover", widget: "image", required: false }
-              - label: "상세 이미지 / 시트"
+              - { label: "대표 이미지", name: "cover", widget: "image", required: false }
+
+              - label: "상세 이미지"
                 name: "gallery"
                 widget: "list"
                 required: false
-                field: { label: "이미지", name: "image", widget: "image" }
+                field:
+                  label: "이미지"
+                  name: "image"
+                  widget: "image"
+
               - { label: "연령", name: "age", widget: "string", required: false }
               - { label: "성별", name: "gender", widget: "string", required: false }
-              - { label: "대표 대사", name: "quote", widget: "string", required: false }
+              - { label: "대표 대사", name: "quote", widget: "text", required: false }
               - { label: "분류 / 종족", name: "species", widget: "string", required: false }
               - { label: "출신", name: "origin", widget: "string", required: false }
               - { label: "직업", name: "job", widget: "string", required: false }
               - { label: "소속", name: "affiliation", widget: "string", required: false }
               - { label: "외모", name: "appearance", widget: "text", required: false }
+
               - label: "복장"
                 name: "outfits"
                 widget: "list"
                 required: false
-                field: { label: "복장", name: "outfit", widget: "string" }
+                field:
+                  label: "복장"
+                  name: "outfit"
+                  widget: "string"
+
               - { label: "특기", name: "specialty", widget: "text", required: false }
-              - { label: "소개", name: "summary", widget: "text", required: false }
-              - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
-
-  # ============================================================
-  # LOUNGE
-  # ============================================================
-  - label: "LOUNGE"
-    name: "lounge"
-    files:
-
-      - label: "NEWS"
-        name: "news"
-        file: "content/lounge/news.json"
-        fields:
-          - label: "뉴스 목록"
-            name: "items"
-            widget: "list"
-            collapsed: true
-            summary: "{{fields.title}}"
-            fields:
-              - { label: "제목", name: "title", widget: "string" }
-              - { label: "호수 / 표기", name: "issue", widget: "string", required: false, default: "FIELD NEWS" }
-              - { label: "대표 이미지", name: "image", widget: "image", required: false }
-              - { label: "목록용 짧은 소개", name: "summary", widget: "text", required: false }
-              - { label: "본문", name: "body", widget: "text", hint: "빈 줄을 넣으면 문단이 나뉩니다." }
-              - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
-
-      - label: "SHORT STORY"
-        name: "stories"
-        file: "content/lounge/stories.json"
-        fields:
-          - label: "단편 목록"
-            name: "items"
-            widget: "list"
-            collapsed: true
-            summary: "{{fields.title}}"
-            fields:
-              - { label: "제목", name: "title", widget: "string" }
-              - { label: "파일 / 표기", name: "issue", widget: "string", required: false, default: "SHORT STORY" }
-              - { label: "대표 이미지", name: "image", widget: "image", required: false }
-              - { label: "목록용 짧은 소개", name: "summary", widget: "text", required: false }
-              - { label: "본문", name: "body", widget: "text", hint: "빈 줄을 넣으면 문단이 나뉩니다." }
-              - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
-
-  # ============================================================
-  # CARDS
-  # ============================================================
-  - label: "CARDS"
-    name: "cards"
-    files:
-
-      - label: "CARD DATABASE"
-        name: "card_database"
-        file: "content/cards/cards.json"
-        fields:
-          - label: "카드 목록"
-            name: "items"
-            widget: "list"
-            collapsed: true
-            summary: "{{fields.title}}"
-            fields:
-              - label: "분류"
-                name: "category"
-                widget: "select"
-                options:
-                  - "기록 카드"
-                  - "현장 장비"
-                  - "지원 카드"
-                  - "복합 카드"
-              - { label: "영문 코드", name: "code", widget: "string", required: false }
-              - { label: "카드 이름", name: "title", widget: "string" }
-              - { label: "대표 이미지", name: "image", widget: "image", required: false }
-              - { label: "짧은 설명", name: "short", widget: "text" }
-              - { label: "상세 설명", name: "body", widget: "text", required: false }
-              - { label: "하단 라벨", name: "asset_label", widget: "string", required: false }
+              - { label: "간략 소개", name: "summary", widget: "text", required: false }
               - { label: "사이트에 표시", name: "visible", widget: "boolean", default: true }
