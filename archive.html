@@ -683,6 +683,7 @@ body{
     <div class="archive-brand">SEOUL RESTORATION NETWORK / ARCHIVE</div>
 
     <button class="archive-tab active" data-view="world" type="button">세계관</button>
+    <button class="archive-tab" data-view="region" type="button">지역</button>
     <button class="archive-tab" data-view="setting" type="button">설정</button>
     <button class="archive-tab" data-view="personnel" type="button">인물</button>
   </nav>
@@ -724,6 +725,7 @@ const archiveContent = document.getElementById("archiveContent");
 const tabs = [...document.querySelectorAll(".archive-tab")];
 
 let WORLD_DATA = {background:[], concept:[], group:[]};
+let REGION_DATA = [];
 let SETTING_DATA = [];
 let PERSONNEL_DATA = [];
 
