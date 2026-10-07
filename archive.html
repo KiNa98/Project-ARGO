@@ -21,13 +21,17 @@ html,body{
 body{
   display:grid;
   place-items:center;
-  padding:2vh 2vw;
+  padding:0;
 }
 
 .archive-window{
   position:relative;
-  width:min(95vw,1800px);
-  height:min(94vh,1080px);
+
+  /* 화면 좌우 약 5%, 상하 약 3%만 남기는 크기 */
+  width:90vw;
+  height:94vh;
+  max-width:none;
+  max-height:none;
 
   display:flex;
   flex-direction:column;
@@ -263,12 +267,16 @@ body{
 .catalog-image{
   position:relative;
 
-  width:100%;
-  aspect-ratio:16/7.8;
-  min-height:280px;
-  max-height:520px;
+  /*
+    바깥 패널만 확대하고 대표 이미지 영역은 과하게 키우지 않는다.
+    넓어진 상세 영역의 왼쪽 위에 기존 체감 크기로 배치한다.
+  */
+  width:min(100%,1055px);
+  aspect-ratio:16/8.3;
+  min-height:0;
+  max-height:none;
 
-  margin-bottom:24px;
+  margin:0 0 18px 0;
 
   overflow:hidden;
 
@@ -628,6 +636,7 @@ body{
     width:96vw;
     height:auto;
     min-height:94vh;
+    max-width:none;
   }
 
   .archive-tabs{
@@ -680,7 +689,7 @@ body{
   }
 
   .catalog-image{
-    min-height:200px;
+    width:100%;
   }
 }
 </style>
