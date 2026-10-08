@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Lounge</title>
+<link rel="stylesheet" href="css/common.css">
 <style>
 *{box-sizing:border-box}
 
@@ -406,31 +407,84 @@ body{
 </main>
 
 <script>
+/* =========================================================
+   이미지 파일 규칙
+   이미지가 아직 없다면 자동으로 플레이스홀더가 표시된다.
+   ========================================================= */
+const NEWS_IMAGES = [
+  "images/NEWS_01.jpg",
+  "images/NEWS_02.jpg",
+  "images/NEWS_03.jpg",
+  "images/NEWS_04.jpg"
+];
 
-function escapeHtml(value){
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
+const STORY_IMAGES = [
+  "images/STORY_01.jpg",
+  "images/STORY_02.jpg",
+  "images/STORY_03.jpg",
+  "images/STORY_04.jpg"
+];
 
-function paragraphs(text){
-  const raw = String(text ?? "").trim();
-  if(!raw) return "";
-  return raw
-    .split(/\n\s*\n/)
-    .map(p => `<p>${escapeHtml(p).replaceAll("\n","<br>")}</p>`)
-    .join("");
-}
+/* 샘플 데이터. 나중에 실제 기사/단편 데이터로 교체 */
+const NEWS_ARTICLES = [
+  {
+    title: "서울 복구 사업 신규 구간 개방",
+    date: "FIELD NEWS / ISSUE 01",
+    image: "images/NEWS_01.jpg",
+    body: [
+      "서울 생활권 확장을 위한 신규 복구 구간이 단계적으로 개방될 예정이다.",
+      "현장 조사와 시설 보강, 거대 생물 이동 경로 조정이 병행되며 일반 접근은 순차적으로 허용된다."
+    ]
+  },
+  {
+    title: "거대 생물 이동 경로 재조정",
+    date: "FIELD NEWS / ISSUE 02",
+    image: "images/NEWS_02.jpg",
+    body: [
+      "생활권과 생태권의 충돌을 줄이기 위한 이동 경로 조정 계획이 발표되었다.",
+      "퇴치보다는 먹이 활동 구역과 완충 지대를 이동시키는 방식이 중심이다."
+    ]
+  },
+  {
+    title: "지하철 복구 작업 현장 소식",
+    date: "FIELD NEWS / ISSUE 03",
+    image: "images/NEWS_03.jpg",
+    body: [
+      "노후 지하 구조물의 보강 작업과 터널 점검이 계속되고 있다.",
+      "복구가 끝난 일부 구간에서는 간이 전차와 유지보수 차량의 운행이 재개되었다."
+    ]
+  }
+];
 
-async function loadJson(path){
-  const response = await fetch(path, {cache:"no-store"});
-  if(!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json();
-}
-
+const STORY_ARTICLES = [
+  {
+    title: "짧은 여행 기록",
+    date: "SHORT STORY / FILE 01",
+    image: "images/STORY_01.jpg",
+    body: [
+      "복구 구역을 지나 오래된 도시의 흔적을 바라보는 짧은 여행기.",
+      "거대한 자연과 인간의 생활권이 맞닿은 풍경을 중심으로 이야기가 진행된다."
+    ]
+  },
+  {
+    title: "현장 취재 노트",
+    date: "SHORT STORY / FILE 02",
+    image: "images/STORY_02.jpg",
+    body: [
+      "복구 현장을 찾은 취재팀과 작업자들의 짧은 대화를 기록한 이야기.",
+      "거대한 사건보다 현장에서 살아가는 사람들의 일상과 태도에 초점을 맞춘다."
+    ]
+  },
+  {
+    title: "휴게실에서",
+    date: "SHORT STORY / FILE 03",
+    image: "images/STORY_03.jpg",
+    body: [
+      "하루 작업이 끝난 뒤 휴게실에서 오가는 잡담과 기사 이야기를 담은 짧은 에피소드.",
+      "세계관 설명보다 인물과 생활의 분위기를 자연스럽게 보여주는 형식이다."
+    ]
+  }
+];
 
 const loungeBody = document.getElementById("loungeBody");
 const loungeBook = document.getElementById("loungeBook");
@@ -439,53 +493,37 @@ const rightPage = document.getElementById("rightPage");
 const newsTab = document.getElementById("newsTab");
 const storyTab = document.getElementById("storyTab");
 
-let NEWS_ARTICLES = [];
-let STORY_ARTICLES = [];
+let activeMode = "cover";
 
-function visibleItems(items){
-  return (Array.isArray(items) ? items : []).filter(item => item.visible !== false);
+function pickRandom(list){
+  return list[Math.floor(Math.random() * list.length)];
 }
 
-function randomWithImage(items){
-  const withImage = visibleItems(items).filter(x=>x.image);
-  if(!withImage.length) return null;
-  return withImage[Math.floor(Math.random()*withImage.length)];
-}
-
-function coverImage(item, alt){
-  if(!item?.image){
-    return `
-      <div class="cover-thumb">
-        <span class="cover-placeholder">IMAGE PREVIEW</span>
-      </div>
-    `;
-  }
-
+function imageBlock(path, alt){
   return `
     <div class="cover-thumb">
-      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(alt)}"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <img src="${path}" alt="${alt}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
       <span class="cover-placeholder" style="display:none;">IMAGE PREVIEW</span>
     </div>
   `;
 }
 
-function articleImage(item){
-  if(!item?.image) return "";
+function articleImage(path, alt){
   return `
     <div class="article-image">
-      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"
-           onerror="this.parentElement.style.display='none';">
+      <img src="${path}" alt="${alt}" onerror="this.style.display='none';">
     </div>
   `;
 }
 
+/* 첫 화면: NEWS와 SHORT STORY 양쪽에 랜덤 이미지 1장씩 */
 function renderCover(){
+  activeMode = "cover";
   newsTab.classList.remove("active");
   storyTab.classList.remove("active");
 
-  const newsItem = randomWithImage(NEWS_ARTICLES);
-  const storyItem = randomWithImage(STORY_ARTICLES);
+  const newsImage = pickRandom(NEWS_IMAGES);
+  const storyImage = pickRandom(STORY_IMAGES);
 
   leftPage.innerHTML = `
     <header class="page-header">
@@ -497,13 +535,9 @@ function renderCover(){
     </header>
 
     <div class="cover-panel">
-      ${coverImage(newsItem,"뉴스 미리보기")}
+      ${imageBlock(newsImage, "뉴스 미리보기")}
       <p class="cover-label">NEWS</p>
-      <p class="cover-copy">${
-        newsItem?.summary
-          ? escapeHtml(newsItem.summary)
-          : "현장 소식과 기사 자료를 열람합니다. 상단 책갈피를 선택하면 기사 목록으로 이동합니다."
-      }</p>
+      <p class="cover-copy">현장 소식과 기사 자료를 열람합니다. 상단 책갈피를 선택하면 기사 목록으로 이동합니다.</p>
     </div>
   `;
 
@@ -517,23 +551,21 @@ function renderCover(){
     </header>
 
     <div class="cover-panel">
-      ${coverImage(storyItem,"단편 미리보기")}
+      ${imageBlock(storyImage, "단편 미리보기")}
       <p class="cover-label">SHORT STORY</p>
-      <p class="cover-copy">${
-        storyItem?.summary
-          ? escapeHtml(storyItem.summary)
-          : "단편, 취재 기록, 여행기를 열람합니다. 상단 책갈피를 선택하면 글 목록으로 이동합니다."
-      }</p>
+      <p class="cover-copy">단편, 취재 기록, 여행기를 열람합니다. 상단 책갈피를 선택하면 글 목록으로 이동합니다.</p>
     </div>
   `;
 }
 
+/* 한쪽 탭을 클릭하면 왼쪽 = 목록 / 오른쪽 = 선택 내용 */
 function renderSection(type){
   const isNews = type === "news";
-  const data = visibleItems(isNews ? NEWS_ARTICLES : STORY_ARTICLES);
+  const data = isNews ? NEWS_ARTICLES : STORY_ARTICLES;
 
-  newsTab.classList.toggle("active",isNews);
-  storyTab.classList.toggle("active",!isNews);
+  activeMode = type;
+  newsTab.classList.toggle("active", isNews);
+  storyTab.classList.toggle("active", !isNews);
 
   leftPage.innerHTML = `
     <header class="page-header">
@@ -545,24 +577,19 @@ function renderSection(type){
     </header>
 
     <div class="article-list">
-      ${
-        data.length
-          ? data.map((item,index)=>`
-              <button class="article-button ${index===0 ? "active" : ""}" type="button" data-index="${index}">
-                <span class="article-category">${isNews ? "NEWS FILE" : "STORY FILE"}</span>
-                <span class="article-title">${escapeHtml(item.title)}</span>
-                <span class="article-date">${escapeHtml(item.issue || "")}</span>
-              </button>
-            `).join("")
-          : `<div class="placeholder">등록된 글이 없습니다.</div>`
-      }
+      ${data.map((item,index)=>`
+        <button class="article-button ${index===0 ? "active" : ""}" type="button" data-index="${index}">
+          <span class="article-category">${isNews ? "NEWS FILE" : "STORY FILE"}</span>
+          <span class="article-title">${item.title}</span>
+          <span class="article-date">${item.date}</span>
+        </button>
+      `).join("")}
     </div>
   `;
 
-  if(data.length) renderArticle(data[0]);
-  else rightPage.innerHTML = `<div class="cover-panel"><p class="cover-copy">등록된 글이 없습니다.</p></div>`;
+  renderArticle(data[0]);
 
-  leftPage.querySelectorAll(".article-button").forEach(button=>{
+  leftPage.querySelectorAll(".article-button").forEach((button)=>{
     button.addEventListener("click",()=>{
       leftPage.querySelectorAll(".article-button").forEach(b=>b.classList.remove("active"));
       button.classList.add("active");
@@ -578,14 +605,14 @@ function renderArticle(item){
         <p class="page-kicker">SELECTED FILE</p>
         <h1 class="page-title">READING</h1>
       </div>
-      <div class="page-meta">${escapeHtml(item.issue || "")}</div>
+      <div class="page-meta">${item.date}</div>
     </header>
 
     <article class="article-view">
-      <h2>${escapeHtml(item.title)}</h2>
-      <p class="meta">${escapeHtml(item.issue || "")}</p>
-      ${articleImage(item)}
-      ${paragraphs(item.body)}
+      <h2>${item.title}</h2>
+      <p class="meta">${item.date}</p>
+      ${articleImage(item.image,item.title)}
+      ${item.body.map(p=>`<p>${p}</p>`).join("")}
     </article>
   `;
 }
@@ -593,31 +620,18 @@ function renderArticle(item){
 newsTab.addEventListener("click",()=>renderSection("news"));
 storyTab.addEventListener("click",()=>renderSection("story"));
 
+/* 패널 외부 클릭 → MAIN */
 loungeBody.addEventListener("click",(event)=>{
   if(!loungeBook.contains(event.target)){
     parent.postMessage("ARGO_CLOSE_PANEL","*");
   }
 });
 
-loungeBook.addEventListener("click",(event)=>event.stopPropagation());
+loungeBook.addEventListener("click",(event)=>{
+  event.stopPropagation();
+});
 
-async function bootLounge(){
-  try{
-    const [news,stories] = await Promise.all([
-      loadJson("content/lounge/news.json"),
-      loadJson("content/lounge/stories.json")
-    ]);
-
-    NEWS_ARTICLES = news?.items || [];
-    STORY_ARTICLES = stories?.items || [];
-  }catch(error){
-    console.error("LOUNGE content load failed:",error);
-  }
-
-  renderCover();
-}
-
-bootLounge();
+renderCover();
 </script>
 </body>
 </html>
